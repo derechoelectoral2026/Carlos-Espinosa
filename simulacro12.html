@@ -2,744 +2,618 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Simulacro INE – VCEyEC · v6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro INE – Módulo D · v6 (Aleatorio)</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Segoe UI',sans-serif;background:#f0fff4;color:#222;min-height:100dvh;overflow-x:hidden;}
-.header{background:linear-gradient(135deg,#1b5e20,#43a047);color:white;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.2);position:sticky;top:0;z-index:200;}
-.header-logo{font-size:1.35rem;flex-shrink:0;}
-.header-text{flex:1;min-width:0;}
-.header h1{font-size:.86rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.header p{font-size:.6rem;opacity:.82;margin-top:1px;}
-.header-right{flex-shrink:0;text-align:right;}
-.timer{font-size:1.45rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.5px;line-height:1;}
-.t-lbl{font-size:.55rem;opacity:.65;margin-top:1px;}
-.timer.warning{color:#ffe082;}
-.timer.danger{color:#ff6b6b;animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
-.progress-wrap{background:#c8e6c9;height:3px;}
-.progress-bar{height:3px;background:#fff;transition:width .4s;}
-.main{padding:12px 12px 80px;max-width:600px;margin:0 auto;}
-.start-screen{background:white;border-radius:14px;padding:22px 16px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-top:14px;text-align:center;}
-.start-screen h2{font-size:1.15rem;color:#1b5e20;margin-bottom:10px;line-height:1.3;}
-.v6-badge{display:inline-block;background:linear-gradient(90deg,#1b5e20,#880e4f);color:#fff;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:10px;}
-.biblio-strip{background:#e8f5e9;border:1.5px solid #c8e6c9;border-radius:10px;padding:9px 12px;margin:11px 0;font-size:.69rem;color:#2e7d32;text-align:left;line-height:1.75;}
-.biblio-strip strong{color:#1b5e20;}
-.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:15px 0;}
-.info-card{background:#e8f5e9;border-radius:10px;padding:11px 8px;}
-.info-card .num{font-size:1.5rem;font-weight:800;color:#1b5e20;}
-.info-card .lbl{font-size:.72rem;color:#666;margin-top:2px;}
-.topic-section{text-align:left;margin:13px 0;}
-.topic-section-title{font-size:.71rem;font-weight:800;color:#1b5e20;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;padding-left:8px;border-left:3px solid #43a047;}
-.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
-.topic-pill{background:#e8f5e9;border-radius:7px;padding:6px 10px;font-size:.75rem;color:#1b5e20;display:flex;justify-content:space-between;gap:6px;}
-.topic-pill .cnt{font-weight:800;flex-shrink:0;}
-.question-card{background:white;border-radius:12px;padding:15px 13px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:12px;animation:fadeUp .25s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;flex-wrap:wrap;gap:5px;}
-.q-badge{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;}
-.q-num{color:#aaa;font-size:.75rem;}
-.passage{background:#f0fff4;border-left:4px solid #43a047;padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:12px;font-size:.83rem;line-height:1.7;}
-.passage-label{font-size:.64rem;font-weight:700;color:#1b5e20;text-transform:uppercase;margin-bottom:5px;}
-.src-note{font-size:.6rem;color:#aaa;font-style:italic;margin-top:5px;}
-.question-text{font-size:.9rem;font-weight:600;line-height:1.5;margin-bottom:13px;}
-.options{display:flex;flex-direction:column;gap:8px;}
-.option{display:flex;align-items:flex-start;gap:10px;padding:13px 12px;border:2px solid #e0e0e0;border-radius:10px;cursor:pointer;transition:border-color .13s,background .13s;font-size:.86rem;line-height:1.45;min-height:50px;}
-.option:active:not(.disabled){border-color:#43a047;background:#e8f5e933;}
-.option.selected{border-color:#43a047;background:#e8f5e955;}
-.option.correct{border-color:#4caf50;background:#e8f5e9;}
-.option.incorrect{border-color:#f44336;background:#ffebee;}
-.option.disabled{cursor:default;}
-.option-letter{width:26px;height:26px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;flex-shrink:0;transition:background .13s,color .13s;}
-.option.selected .option-letter{background:#43a047;color:white;}
-.option.correct .option-letter{background:#4caf50;color:white;}
-.option.incorrect .option-letter{background:#f44336;color:white;}
-.opt-text{flex:1;}
-.opt-icon{flex-shrink:0;font-size:.9rem;}
-.explanation{margin-top:12px;padding:11px 12px;background:#f0fff4;border-radius:9px;border-left:4px solid #43a047;font-size:.81rem;line-height:1.65;display:none;}
-.explanation.show{display:block;}
-.explanation strong{color:#1b5e20;}
-.ver-sol-wrap{text-align:center;margin-bottom:10px;}
-.btn-ver-sol{background:white;border:2px solid #43a047;color:#1b5e20;padding:9px 20px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;min-height:44px;transition:all .13s;}
-.btn-ver-sol:active{background:#e8f5e9;}
-.btn{padding:10px 18px;border-radius:10px;border:none;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;min-height:44px;}
-.btn:active{transform:scale(.96);}
-.btn-primary{background:linear-gradient(135deg,#1b5e20,#43a047);color:white;}
-.btn-primary:active{opacity:.88;}
-.btn-secondary{background:#f0f0f0;color:#555;}
-.btn-secondary:active{background:#e0e0e0;}
-.btn-lg{padding:13px 26px;font-size:.92rem;border-radius:12px;}
-.btn-sm{padding:9px 15px;font-size:.8rem;min-height:40px;}
-.nav-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e0e0e0;padding:8px 14px;padding-bottom:max(8px,env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 -2px 10px rgba(0,0,0,.07);z-index:200;}
-.nav-info{font-size:.77rem;color:#888;line-height:1.4;}
-.nav-info span{color:#1b5e20;font-weight:700;}
-.nav-btns{display:flex;gap:7px;flex-shrink:0;}
-.results-screen{background:white;border-radius:14px;padding:24px 16px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-top:14px;text-align:center;}
-.score-circle{width:108px;height:108px;border-radius:50%;margin:0 auto 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.85rem;font-weight:900;color:white;}
-.score-sub{font-size:.68rem;font-weight:500;opacity:.85;}
-.score-good{background:linear-gradient(135deg,#43a047,#66bb6a);}
-.score-mid{background:linear-gradient(135deg,#f57c00,#ffa726);}
-.score-low{background:linear-gradient(135deg,#c62828,#ef5350);}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;}
-.stat-card{background:#f9f9f9;border-radius:10px;padding:11px 8px;}
-.stat-card .n{font-size:1.35rem;font-weight:800;}
-.stat-card .l{font-size:.7rem;color:#888;margin-top:2px;}
-.stat-correct .n{color:#43a047;}
-.stat-wrong .n{color:#e53935;}
-.stat-skip .n{color:#888;}
-.area-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-size:.8rem;}
-.area-name{flex:1;color:#444;}
-.area-bar-wrap{flex:2;background:#eee;border-radius:4px;height:6px;}
-.area-bar{height:6px;border-radius:4px;}
-.area-pct{width:32px;text-align:right;font-weight:700;font-size:.77rem;}
-.weak-banner{background:linear-gradient(135deg,#1b5e20,#43a047);color:white;border-radius:11px;padding:12px 14px;margin:12px 0;text-align:left;}
-.weak-banner h4{margin-bottom:4px;font-size:.9rem;}
-.weak-banner p{font-size:.78rem;opacity:.9;margin-bottom:6px;}
-.weak-tags{display:flex;flex-wrap:wrap;gap:5px;}
-.weak-tag{background:rgba(255,255,255,.25);border-radius:5px;padding:3px 8px;font-size:.74rem;font-weight:700;}
-.hidden{display:none !important;}
-@media(max-width:360px){.topic-grid{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr 1fr}}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f0fff4; color: #222; min-height: 100vh; }
+  .header { background: linear-gradient(135deg, #1b5e20, #43a047); color: white; padding: 18px 24px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .header-logo { font-size: 1.8rem; }
+  .header h1 { font-size: 1.1rem; font-weight: 700; }
+  .header p { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
+  .header-right { margin-left: auto; text-align: right; }
+  .timer { font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .timer.warning { color: #ffe082; }
+  .timer.danger { color: #ff6b6b; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.5} }
+  .progress-wrap { background: #c8e6c9; height: 5px; }
+  .progress-bar { height: 5px; background: #fff; transition: width 0.4s; }
+  .main { max-width: 760px; margin: 0 auto; padding: 20px 16px 90px; }
+
+  .start-screen { background: white; border-radius: 16px; padding: 36px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-top: 30px; }
+  .start-screen h2 { font-size: 1.4rem; color: #1b5e20; margin-bottom: 10px; }
+  .info-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 20px 0; }
+  .info-card { background: #e8f5e9; border-radius: 12px; padding: 14px; }
+  .info-card .num { font-size: 1.7rem; font-weight: 800; color: #1b5e20; }
+  .info-card .lbl { font-size: 0.78rem; color: #666; margin-top: 2px; }
+  .topic-section { text-align: left; margin: 14px 0; }
+  .topic-section-title { font-size: 0.76rem; font-weight: 800; color: #1b5e20; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; padding-left: 4px; border-left: 3px solid #43a047; padding-left: 8px; }
+  .topic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+  .topic-pill { background: #e8f5e9; border-radius: 8px; padding: 7px 11px; font-size: 0.79rem; color: #1b5e20; display: flex; justify-content: space-between; gap: 8px; }
+  .topic-pill .cnt { font-weight: 800; flex-shrink: 0; }
+
+  .question-card { background: white; border-radius: 14px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); margin-bottom: 16px; }
+  .q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 6px; }
+  .q-badge { font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+  .q-num { color: #aaa; font-size: 0.82rem; }
+  .passage { background: #f0fff4; border-left: 4px solid #43a047; padding: 14px; border-radius: 0 8px 8px 0; margin-bottom: 16px; font-size: 0.9rem; line-height: 1.7; }
+  .passage-label { font-size: 0.72rem; font-weight: 700; color: #1b5e20; text-transform: uppercase; margin-bottom: 6px; }
+  .question-text { font-size: 0.97rem; font-weight: 600; line-height: 1.5; margin-bottom: 18px; }
+  .options { display: flex; flex-direction: column; gap: 9px; }
+  .option { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.18s; font-size: 0.9rem; line-height: 1.4; }
+  .option:hover:not(.disabled) { border-color: #43a047; background: #e8f5e933; }
+  .option.selected { border-color: #43a047; background: #e8f5e955; }
+  .option.correct { border-color: #4caf50; background: #e8f5e9; }
+  .option.incorrect { border-color: #f44336; background: #ffebee; }
+  .option.disabled { cursor: default; }
+  .option-letter { width: 26px; height: 26px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.78rem; flex-shrink: 0; }
+  .option.selected .option-letter { background: #43a047; color: white; }
+  .option.correct .option-letter { background: #4caf50; color: white; }
+  .option.incorrect .option-letter { background: #f44336; color: white; }
+  .explanation { margin-top: 14px; padding: 12px 14px; background: #f0fff4; border-radius: 10px; border-left: 4px solid #43a047; font-size: 0.85rem; line-height: 1.6; display: none; }
+  .explanation.show { display: block; }
+
+  .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e0e0e0; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.06); }
+  .nav-info { font-size: 0.82rem; color: #888; }
+  .nav-info span { color: #1b5e20; font-weight: 700; }
+  .btn { padding: 11px 22px; border-radius: 10px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.18s; }
+  .btn-primary { background: linear-gradient(135deg,#1b5e20,#43a047); color: white; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-secondary { background: #f0f0f0; color: #555; }
+  .btn-secondary:hover { background: #e0e0e0; }
+  .btn-lg { padding: 15px 36px; font-size: 1rem; border-radius: 12px; }
+
+  .results-screen { background: white; border-radius: 16px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-top: 20px; text-align: center; }
+  .score-circle { width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; color: white; }
+  .score-sub { font-size: 0.72rem; font-weight: 500; opacity: 0.85; }
+  .score-good { background: linear-gradient(135deg,#43a047,#66bb6a); }
+  .score-mid { background: linear-gradient(135deg,#f57c00,#ffa726); }
+  .score-low { background: linear-gradient(135deg,#c62828,#ef5350); }
+  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 20px 0; }
+  .stat-card { background: #f9f9f9; border-radius: 10px; padding: 14px; }
+  .stat-card .n { font-size: 1.5rem; font-weight: 800; }
+  .stat-card .l { font-size: 0.75rem; color: #888; margin-top: 2px; }
+  .stat-correct .n { color: #43a047; }
+  .stat-wrong .n { color: #e53935; }
+  .stat-skip .n { color: #888; }
+  .area-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
+  .area-name { flex: 1; color: #444; }
+  .area-bar-wrap { flex: 2; background: #eee; border-radius: 4px; height: 7px; }
+  .area-bar { height: 7px; border-radius: 4px; }
+  .area-pct { width: 34px; text-align: right; font-weight: 700; font-size: 0.82rem; }
+  .weak-banner { background: linear-gradient(135deg,#1b5e20,#43a047); color: white; border-radius: 12px; padding: 14px 18px; margin: 16px 0; text-align: left; }
+  .weak-banner h4 { margin-bottom: 6px; }
+  .weak-banner p { font-size: 0.83rem; opacity: 0.9; margin-bottom: 8px; }
+  .weak-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .weak-tag { background: rgba(255,255,255,0.25); border-radius: 6px; padding: 3px 9px; font-size: 0.78rem; font-weight: 700; }
+  .hidden { display: none !important; }
+  @media(max-width:500px){ .info-grid,.stats-grid{grid-template-columns:1fr 1fr} .topic-grid{grid-template-columns:1fr} }
+
+  /* === TABLA RELACIONA COLUMNAS === */
+  .match-table { width:100%; border-collapse:collapse; margin-bottom:16px; font-size:0.88rem; }
+  .match-table th { background:#e8f5e9; color:#1b5e20; font-weight:800; padding:8px 10px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.4px; }
+  .match-table td { padding:8px 10px; border-bottom:1px solid #f0f0f0; vertical-align:top; line-height:1.45; }
+  .match-table tr:last-child td { border-bottom:none; }
+  .match-table td:first-child { font-weight:800; color:#1b5e20; white-space:nowrap; width:50px; }
+  .match-table td:nth-child(2) { color:#333; border-right:2px dashed #c8e6c9; padding-right:14px; }
+  .match-table td:nth-child(3) { font-weight:800; color:#0d47a1; white-space:nowrap; width:30px; padding-left:14px; }
+  .match-table td:last-child { color:#333; }
+  .match-table-wrap { background:#f8fffe; border:1px solid #c8e6c9; border-radius:10px; padding:4px; margin-bottom:14px; overflow-x:auto; }
+  .complexity-badge { display:inline-flex; align-items:center; gap:4px; background:#fff3e0; color:#e65100; border:1px solid #ffcc02; border-radius:6px; font-size:0.68rem; font-weight:800; padding:2px 7px; margin-left:6px; vertical-align:middle; }
+  .q-badge-wrap { display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
+
+  /* === BIBLIOGRAFÍA === */
+  .biblio-section { max-width: 760px; margin: 0 auto; padding: 10px 16px 60px; }
+  .biblio-toggle { width: 100%; background: linear-gradient(135deg,#1b5e20,#43a047); color: white; border: none; border-radius: 12px; padding: 14px 20px; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: opacity 0.2s; }
+  .biblio-toggle:hover { opacity: 0.9; }
+  .biblio-toggle .arrow { transition: transform 0.3s; font-size: 1rem; }
+  .biblio-toggle.open .arrow { transform: rotate(180deg); }
+  .biblio-box { background: white; border-radius: 0 0 12px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 24px; display: none; }
+  .biblio-box.show { display: block; }
+  .biblio-box h3 { font-size: 0.82rem; font-weight: 800; color: #1b5e20; text-transform: uppercase; letter-spacing: 0.6px; margin: 18px 0 8px; border-bottom: 2px solid #e8f5e9; padding-bottom: 4px; }
+  .biblio-box h3:first-child { margin-top: 0; }
+  .biblio-list { list-style: none; padding: 0; margin: 0 0 4px; }
+  .biblio-list li { padding: 6px 0 6px 14px; border-left: 3px solid #c8e6c9; margin-bottom: 5px; font-size: 0.82rem; line-height: 1.55; color: #333; }
+  .biblio-list li strong { color: #1b5e20; }
+  .biblio-url { font-size: 0.74rem; color: #43a047; word-break: break-all; display: block; margin-top: 2px; }
 </style>
 </head>
 <body>
-
 <div class="header">
-  <div class="header-logo">📚</div>
-  <div class="header-text">
-    <h1>VCEyEC · v6 — Bibliografía oficial</h1>
-    <p>Conocimientos técnicos del cargo · Nivel experto · 🔀 Aleatorio</p>
+  <div class="header-logo">📂</div>
+  <div>
+    <h1>Simulacro INE – Módulo D · v6 <span style="font-size:.75em;opacity:.85">🔀 Aleatorio + 🧩 Relaciona</span></h1>
+    <p>Conocimientos técnicos · Vocalía de Organización Electoral</p>
   </div>
   <div class="header-right">
     <div class="timer" id="timer">50:00</div>
-    <div class="t-lbl">tiempo restante</div>
+    <div style="font-size:0.68rem;opacity:0.7;margin-top:2px">tiempo restante</div>
   </div>
 </div>
 <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-
 <div class="main">
   <div class="start-screen" id="startScreen">
-    <div class="v6-badge">🏆 Versión 6 · Nivel experto · Bibliografía oficial</div>
-    <h2>📚 Vocalía de Capacitación Electoral y Educación Cívica</h2>
-    <p style="background:#e8f5e9;border-radius:10px;padding:10px;color:#1b5e20;font-weight:600;margin-bottom:13px;font-size:.81rem">
-      🔥 40 preguntas nuevas · VPcM · Voto en prisión preventiva · Cómputos distritales · Sesiones de Junta · Nivel experto
-    </p>
+    <h2>📂 Módulo D — Conocimientos técnicos del cargo</h2>
+    <p style="background:#e8f5e9;border-radius:10px;padding:10px;color:#1b5e20;font-weight:600;margin-bottom:14px">🎯 Este módulo evalúa lo más operativo del puesto. ¡Es clave dominarlo! · <strong>🔀 Preguntas en orden aleatorio cada vez</strong></p>
+    <p style="background:#fff3e0;border-radius:10px;padding:9px 12px;color:#e65100;font-weight:600;margin-bottom:14px;font-size:0.87rem">🧩 <strong>v6 · Mayor complejidad:</strong> incluye preguntas de <em>relaciona columnas</em> donde las tres opciones son muy similares entre sí — ¡lee con cuidado!</p>
     <div class="info-grid">
-      <div class="info-card"><div class="num">40</div><div class="lbl">Preguntas</div></div>
+      <div class="info-card"><div class="num">38</div><div class="lbl">Preguntas</div></div>
       <div class="info-card"><div class="num">50</div><div class="lbl">Minutos</div></div>
       <div class="info-card"><div class="num">5</div><div class="lbl">Áreas</div></div>
     </div>
     <div class="topic-section">
-      <div class="topic-section-title">🏢 1. Marco normativo e institucional (6)</div>
+      <div class="topic-section-title">🏢 1. Estructura del INE (6 preguntas)</div>
       <div class="topic-grid">
-        <div class="topic-pill"><span>1.1 Fundamento legal</span><span class="cnt">2</span></div>
-        <div class="topic-pill"><span>1.2 Atribuciones y funciones</span><span class="cnt">2</span></div>
-        <div class="topic-pill"><span>1.3 Estructura interna</span><span class="cnt">2</span></div>
+        <div class="topic-pill"><span>1.1 Direcciones ejecutivas</span><span class="cnt">1 🧩</span></div>
+        <div class="topic-pill"><span>1.2 Juntas locales y distritales ejecutivas</span><span class="cnt">2 🧩</span></div>
+        <div class="topic-pill"><span>1.3 Consejos locales y distritales</span><span class="cnt">3 🧩</span></div>
       </div>
-      <div class="topic-section-title">🎓 2. Capacitación electoral (14)</div>
+      <div class="topic-section-title">🗓️ 2. Proceso electoral (18 preguntas)</div>
       <div class="topic-grid">
-        <div class="topic-pill"><span>2.1 Selección de funcionarios</span><span class="cnt">4</span></div>
-        <div class="topic-pill"><span>2.2 Proceso de capacitación</span><span class="cnt">4</span></div>
-        <div class="topic-pill"><span>2.3 Materiales y técnicas</span><span class="cnt">3</span></div>
-        <div class="topic-pill"><span>2.4 Supervisión y control</span><span class="cnt">3</span></div>
+        <div class="topic-pill"><span>2.1 Actividades de preparación</span><span class="cnt">3 🧩</span></div>
+        <div class="topic-pill"><span>2.2 Modalidades de voto anticipado</span><span class="cnt">3 🧩</span></div>
+        <div class="topic-pill"><span>2.3 Proceso electoral del PJF</span><span class="cnt">1</span></div>
+        <div class="topic-pill"><span>2.4 Atribuciones especiales del INE</span><span class="cnt">3 🧩</span></div>
+        <div class="topic-pill"><span>2.5 Actividades del día de la jornada</span><span class="cnt">5 🧩</span></div>
       </div>
-      <div class="topic-section-title">🗳️ 3. Jornada electoral (10)</div>
+      <div class="topic-section-title">⚖️ 3. Justicia electoral (8 preguntas)</div>
       <div class="topic-grid">
-        <div class="topic-pill"><span>3.1 Instalación de casillas</span><span class="cnt">3</span></div>
-        <div class="topic-pill"><span>3.2 Sustitución de funcionarios</span><span class="cnt">3</span></div>
-        <div class="topic-pill"><span>3.3 Incidentes y contingencias</span><span class="cnt">4</span></div>
+        <div class="topic-pill"><span>3.1 Delitos en materia electoral</span><span class="cnt">1</span></div>
+        <div class="topic-pill"><span>3.2 Medios de impugnación</span><span class="cnt">2 🧩</span></div>
+        <div class="topic-pill"><span>3.3 Violencia política contra mujeres</span><span class="cnt">4 🧩</span></div>
       </div>
-      <div class="topic-section-title">📖 4. Educación cívica y VPcM (6)</div>
+      <div class="topic-section-title">📦 4. Organización de la elección (8 preguntas)</div>
       <div class="topic-grid">
-        <div class="topic-pill"><span>4.1 Programas y VPcM</span><span class="cnt">3</span></div>
-        <div class="topic-pill"><span>4.2 Cultura democrática</span><span class="cnt">3</span></div>
+        <div class="topic-pill"><span>4.1 Acreditación de observadores</span><span class="cnt">2</span></div>
+        <div class="topic-pill"><span>4.2 Casillas electorales</span><span class="cnt">2 🧩</span></div>
+        <div class="topic-pill"><span>4.3 Recepción, almacenamiento y distribución</span><span class="cnt">3 🧩</span></div>
       </div>
-      <div class="topic-section-title">📋 5. Normativa del cargo (4)</div>
+      <div class="topic-section-title">📊 5. Resultados y declaración de validez (4 preguntas)</div>
       <div class="topic-grid">
-        <div class="topic-pill"><span>5.1 LGIPE / Cómputos / Sesiones</span><span class="cnt">2</span></div>
-        <div class="topic-pill"><span>5.2 LGSMIME / Estatuto SPEN</span><span class="cnt">2</span></div>
+        <div class="topic-pill"><span>5.1 Remisión de documentación</span><span class="cnt">1</span></div>
+        <div class="topic-pill"><span>5.2 Cómputos distritales</span><span class="cnt">2 🧩</span></div>
       </div>
+      <p style="font-size:0.75rem;color:#888;margin-top:6px;text-align:left;padding-left:4px">🧩 = incluye pregunta de <em>relaciona columnas</em></p>
     </div>
-    <div class="biblio-strip">
-      <strong>📚 Bibliografía oficial:</strong><br>
-      LGMDE (2021) · LGIPE (2024) · LGSMIME (2024)<br>
-      IFE (2008) <em>Reglamento de Sesiones para Juntas Locales y Distritales</em><br>
-      INE (2020) <em>Reglamento de Quejas y Denuncias — VPcM en Razón de Género</em><br>
-      INE (2022) <em>Protocolo atención a víctimas y análisis de riesgo — VPcM</em><br>
-      INE (2023) <em>Acuerdo INE/CG602/2023 — Voto en prisión preventiva</em><br>
-      INE (2023) <em>Lineamientos para cómputos distritales, de entidad federativa y de Circunscripción PEF 2023-2024</em>
-    </div>
-    <p style="font-size:.73rem;color:#888;margin-bottom:14px">⚡ El orden de preguntas cambia en cada sesión</p>
-    <button class="btn btn-primary btn-lg" style="width:100%" onclick="startExam()">Comenzar diagnóstico →</button>
+    <button class="btn btn-primary btn-lg" onclick="startExam()">Comenzar diagnóstico</button>
   </div>
   <div id="examScreen" class="hidden"></div>
   <div id="resultsScreen" class="hidden"></div>
 </div>
-
 <div class="nav-bar hidden" id="navBar">
-  <div class="nav-info">Preg. <span id="navCurrent">1</span> de <span id="navTotal">40</span></div>
-  <div class="nav-btns">
-    <button class="btn btn-secondary btn-sm" id="btnPrev" onclick="prevQ()">← Ant.</button>
-    <button class="btn btn-primary btn-sm" id="btnNext" onclick="nextQ()">Sig. →</button>
+  <div class="nav-info">Pregunta <span id="navCurrent">1</span> de <span id="navTotal">40</span></div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-secondary" id="btnPrev" onclick="prevQ()">← Anterior</button>
+    <button class="btn btn-primary" id="btnNext" onclick="nextQ()">Siguiente →</button>
   </div>
 </div>
-
 <script>
-/* ═════════════════════════════════════════════════════════════════
-   VCEyEC v6 — 40 preguntas completamente nuevas
-   Bibliografía (imagen, pág. 25 Guía VCEYEC):
-   · LGMDE (2021)
-   · LGIPE (2024)
-   · LGSMIME (2024)
-   · IFE (2008) Reglamento de Sesiones para Juntas Locales y Distritales
-   · INE (2020) Reglamento de Quejas y Denuncias — VPcM en Razón de Género
-   · INE (2022) Protocolo atención a víctimas y análisis de riesgo — VPcM
-   · INE (2023) Acuerdo INE/CG602/2023 — Voto en prisión preventiva
-   · INE (2023) Lineamientos para cómputos distritales PEF 2023-2024
-   
-   Nivel experto: distinciones jurídicas de tercer orden, casos límite,
-   cadenas causales con múltiples normas, distractores plausibles.
-═════════════════════════════════════════════════════════════════ */
-const BANK = [
+const Q=[
+  // === 1.1 DIRECCIONES EJECUTIVAS (1) — RELACIONA COLUMNAS ===
+  {sa:"1.1",sal:"Direcciones ejecutivas",area:"Estructura del INE",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Dirección Ejecutiva</th><th colspan="2">Función principal</th></tr></thead><tbody>
+<tr><td>1.</td><td>DEOE</td><td>a)</td><td>Capacitar a funcionarios de casilla y promover cultura democrática ciudadana</td></tr>
+<tr><td>2.</td><td>DECEyEC</td><td>b)</td><td>Administrar el Registro Federal de Electores y el padrón electoral</td></tr>
+<tr><td>3.</td><td>DERFE</td><td>c)</td><td>Coordinar la logística del proceso electoral: casillas, observadores y materiales</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada Dirección Ejecutiva del INE con su función principal:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1c, 2b, 3a"],
+   c:0,ex:"La DEOE (1c) coordina la logística electoral. La DECEyEC (2a) capacita funcionarios de casilla y desarrolla educación cívica. La DERFE (3b) administra el Registro Federal de Electores y el padrón. Son tres direcciones complementarias con funciones sustantivas distintas."},
 
-  /* ══════════════════════════════════════════════════
-     1.1  FUNDAMENTO LEGAL  (2)
-  ══════════════════════════════════════════════════ */
-  { sa:"1.1", sal:"Fundamento legal de la VCEyEC", area:"Marco normativo e institucional",
-    src:"LGIPE (2024), Arts. 76 y 166–186; LGMDE (2021)",
-    p:"La VCEyEC tiene obligaciones que surgen tanto de la LGIPE como de la LGMDE. Ambas normas generan deberes distintos pero complementarios para el Vocal de Capacitación.",
-    pt:"Doble obligación normativa: capacitación y prevención de delitos",
-    q:"¿Qué obligación específica genera la LGMDE (2021) para la VCEyEC que va más allá de las atribuciones de capacitación previstas en la LGIPE?",
-    o:["La LGMDE obliga a la VCEyEC a investigar delitos electorales en su distrito.",
-       "La LGMDE obliga a la VCEyEC a capacitar a los funcionarios de casilla en el conocimiento de las conductas tipificadas como delitos electorales —coacción del voto, intimidación, robo de urna, alteración de actas— para que las reconozcan, las prevengan y las reporten oportunamente, complementando así la dimensión preventiva de la capacitación.",
-       "La LGMDE solo obliga a la FGR; no genera ninguna obligación adicional para la VCEyEC."],
-    c:1,
-    ex:"La LGMDE tipifica los delitos electorales pero también tiene una dimensión preventiva: la capacitación de los funcionarios de casilla es el mecanismo principal para evitar su comisión. La VCEyEC debe incluir en la formación de los funcionarios el reconocimiento de conductas delictivas (coacción, intimidación, alteración de actas) para que puedan reportarlas durante la jornada al CAE/Supervisor y eventualmente a las autoridades." },
+  // === 1.2 JUNTAS LOCALES Y DISTRITALES (2) ===
+  {sa:"1.2",sal:"Juntas locales y distritales ejecutivas",area:"Estructura del INE",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es la diferencia entre una Junta Local Ejecutiva y una Junta Distrital Ejecutiva del INE?",
+   o:["Son órganos equivalentes; la Junta Local opera únicamente en la Ciudad de México y la Distrital en los demás estados.",
+      "La Junta Local Ejecutiva coordina y supervisa el trabajo de las Juntas Distritales en la entidad; la Junta Distrital Ejecutiva opera directamente en cada uno de los 300 distritos electorales.",
+      "Las Juntas Locales son temporales (solo en proceso electoral); las Distritales son permanentes y tienen rango superior."],
+   c:1,ex:"La Junta Local Ejecutiva es el órgano desconcentrado permanente de nivel estatal que coordina a las Juntas Distritales de la entidad. Existen 32 (una por entidad federativa). Las 300 Juntas Distritales operan en cada distrito electoral federal uninominal."},
 
-  { sa:"1.1", sal:"Fundamento legal de la VCEyEC", area:"Marco normativo e institucional",
-    src:"LGIPE (2024), Art. 76; LGSMIME (2024)",
-    p:"La LGSMIME regula los medios de impugnación en materia electoral. Las resoluciones del Consejo Distrital durante el proceso —incluyendo las relativas a la integración de casillas— son susceptibles de impugnación.",
-    pt:"Resoluciones del Consejo Distrital e impugnabilidad",
-    q:"¿En qué momento del proceso electoral las actuaciones de la VCEyEC pueden ser objeto de impugnación ante el TEPJF a través de los medios previstos en la LGSMIME?",
-    o:["Las actuaciones de la VCEyEC no son impugnables en ningún caso porque son actos técnicos sin efectos jurídicos.",
-       "Las actuaciones de la VCEyEC pueden derivar en resoluciones del Consejo Distrital (como la aprobación de las listas de funcionarios de casilla o la segunda insaculación) que son actos de autoridad impugnables mediante el RIN o el JIN ante el TEPJF, si afectan los derechos de los partidos o ciudadanos en el proceso.",
-       "Solo las actuaciones del Consejo General del INE son impugnables; las de los órganos distritales no."],
-    c:1,
-    ex:"La VCEyEC no emite resoluciones por sí misma, pero sus actuaciones técnicas se materializan en acuerdos del Consejo Distrital (segunda insaculación, aprobación de listas de MDC) que son actos de autoridad susceptibles de impugnación. La LGSMIME permite a los partidos cuestionar esos actos mediante los medios procedentes, lo que hace que la calidad jurídica del trabajo de la VCEyEC sea determinante para la solidez del proceso." },
+  // === 1.2 — RELACIONA COLUMNAS: vocales y funciones ===
+  {sa:"1.2",sal:"Juntas locales y distritales ejecutivas",area:"Estructura del INE",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Vocal de la Junta Distrital</th><th colspan="2">Función específica</th></tr></thead><tbody>
+<tr><td>1.</td><td>Vocal Ejecutivo/a</td><td>a)</td><td>Actúa como secretario/a del Consejo Distrital; levanta actas y da fe de acuerdos</td></tr>
+<tr><td>2.</td><td>Vocal Secretario/a</td><td>b)</td><td>Coordina la capacitación de funcionarios de casilla y la educación cívica en el distrito</td></tr>
+<tr><td>3.</td><td>Vocal de Capacitación</td><td>c)</td><td>Preside la Junta y representa al INE en el distrito; responsable de la gestión operativa</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada vocal de la Junta Distrital Ejecutiva con su función específica:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1b, 2c, 3a"],
+   c:0,ex:"El Vocal Ejecutivo/a (1c) preside la Junta y representa al INE en el distrito. El Vocal Secretario/a (2a) actúa también como secretario/a del Consejo Distrital durante el proceso electoral. El Vocal de Capacitación (3b) coordina la capacitación de funcionarios de casilla y la educación cívica."},
 
-  /* ══════════════════════════════════════════════════
-     1.2  ATRIBUCIONES Y FUNCIONES  (2)
-  ══════════════════════════════════════════════════ */
-  { sa:"1.2", sal:"Atribuciones y funciones", area:"Marco normativo e institucional",
-    src:"IFE (2008). Reglamento de Sesiones para Juntas Locales y Distritales Ejecutivas",
-    p:"El Reglamento de Sesiones para Juntas Locales y Distritales Ejecutivas del IFE (2008) regula la forma en que los órganos permanentes del INE a nivel local y distrital deliberan y toman decisiones. El Vocal de Capacitación Electoral y Educación Cívica es integrante de la Junta Distrital Ejecutiva.",
-    pt:"Participación del Vocal de Capacitación en las sesiones de Junta",
-    q:"¿Cuál es la función específica del Vocal de Capacitación en las sesiones de la Junta Distrital Ejecutiva conforme al Reglamento de Sesiones?",
-    o:["Preside la sesión cuando el Vocal Ejecutivo está ausente y tiene voto de calidad en todos los asuntos.",
-       "Participa con voz y voto en los asuntos del orden del día; es responsable de informar sobre el avance de los programas de capacitación y educación cívica; puede proponer puntos al orden del día relacionados con su área; y debe elaborar y presentar los informes técnicos que la Junta requiera en materia de su competencia.",
-       "Solo asiste como testigo sin voz ni voto; su función es únicamente firmar el acta de la sesión."],
-    c:1,
-    ex:"Conforme al Reglamento de Sesiones, los vocales funcionales integran la Junta con voz y voto en todos los asuntos. El Vocal de Capacitación tiene la responsabilidad específica de reportar los avances de su área, proponer puntos relacionados con capacitación y educación cívica, y presentar la información técnica necesaria para que la Junta tome decisiones informadas. Su participación no es pasiva." },
+  // === 1.3 CONSEJOS LOCALES Y DISTRITALES (3) ===
+  {sa:"1.3",sal:"Consejos locales y distritales",area:"Estructura del INE",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es la diferencia entre la Junta Distrital Ejecutiva y el Consejo Distrital del INE en cuanto a su naturaleza y temporalidad?",
+   o:["La Junta Distrital Ejecutiva es el órgano permanente de carácter técnico-ejecutivo; el Consejo Distrital es el órgano colegiado de decisión que se instala temporalmente durante el proceso electoral.",
+      "Son el mismo órgano con dos nombres distintos según el periodo del año; ambos tienen igual jerarquía.",
+      "El Consejo Distrital es el órgano permanente; la Junta Distrital solo opera durante la jornada electoral y luego se disuelve."],
+   c:0,ex:"La Junta Distrital Ejecutiva es permanente y técnico-ejecutiva (presidida por el Vocal Ejecutivo). El Consejo Distrital es temporal, se instala en octubre del año previo a la elección y está integrado por un Consejero Presidente y seis Consejeros Electorales Distritales con derecho a voto."},
 
-  { sa:"1.2", sal:"Atribuciones y funciones", area:"Marco normativo e institucional",
-    src:"LGIPE (2024), Art. 76; INE (2020) Reglamento de Quejas — VPcM",
-    p:"La Violencia Política contra las Mujeres en Razón de Género (VPcM) es una forma de violencia tipificada en la LGMDE y la LGIPE que puede ocurrir en el entorno de las actividades electorales, incluyendo los procesos de capacitación.",
-    pt:"VPcM en el ámbito de la VCEyEC",
-    q:"¿Cuál es la obligación de la VCEyEC cuando durante un proceso de capacitación o en el ejercicio de sus funciones identifica o recibe un reporte de posible VPcM contra una funcionaria de casilla o CAE?",
-    o:["La VCEyEC no tiene ninguna obligación específica en materia de VPcM; debe derivar el caso directamente a la PGR.",
-       "La VCEyEC debe orientar a la víctima sobre los mecanismos de denuncia ante el INE (Reglamento de Quejas y Denuncias 2020), documentar los hechos, garantizar la confidencialidad, activar el protocolo de atención (INE 2022) para el análisis de riesgo y la derivación a instancias de apoyo especializadas, y notificar al Vocal Ejecutivo para escalar al nivel institucional correspondiente.",
-       "La VCEyEC debe resolver directamente el caso de VPcM mediante un procedimiento disciplinario interno sin intervención de otras instancias."],
-    c:1,
-    ex:"El Reglamento de Quejas y Denuncias (INE, 2020) y el Protocolo de atención (INE, 2022) establecen una ruta de actuación clara: documentar, orientar, garantizar confidencialidad, activar el análisis de riesgo y derivar. La VCEyEC no resuelve el caso pero es un actor clave en la identificación temprana y la activación del protocolo, especialmente porque trabaja directamente con funcionarias de casilla y CAE en campo." },
+  {sa:"1.3",sal:"Consejos locales y distritales",area:"Estructura del INE",cx:false,
+   p:null,pt:null,mt:null,
+   q:"Durante las sesiones del Consejo Distrital, los representantes de los partidos políticos tienen voz pero no voto. ¿Por qué es relevante esta distinción?",
+   o:["Para que los partidos no conozcan los acuerdos del Consejo antes de publicarse en el Diario Oficial.",
+      "Para que los partidos puedan cobrar sus prerrogativas electorales sin necesidad de rendir cuentas directas al INE.",
+      "Para garantizar que las decisiones sean tomadas por consejeros ciudadanos imparciales, mientras los partidos expresan su posición y queda constancia de ello en acta."],
+   c:2,ex:"La distinción voz-sin-voto protege la autonomía e imparcialidad del INE: los consejeros ciudadanos deciden sin estar sujetos a la presión del voto partidista, pero los partidos pueden expresarse y sus posiciones quedan en el acta, lo que garantiza transparencia y rendición de cuentas."},
 
-  /* ══════════════════════════════════════════════════
-     1.3  ESTRUCTURA INTERNA  (2)
-  ══════════════════════════════════════════════════ */
-  { sa:"1.3", sal:"Estructura interna", area:"Marco normativo e institucional",
-    src:"IFE (2008). Reglamento de Sesiones para Juntas Locales y Distritales Ejecutivas",
-    p:"El Reglamento de Sesiones regula el quórum, las mayorías y los tipos de sesión de las Juntas Locales y Distritales Ejecutivas. Existen sesiones ordinarias, extraordinarias y permanentes, cada una con requisitos procedimentales distintos.",
-    pt:"Tipos de sesión y quórum de la Junta Distrital",
-    q:"¿En qué supuesto puede el Vocal Ejecutivo convocar a una sesión extraordinaria de la Junta Distrital y qué diferencia tiene respecto a la sesión ordinaria en cuanto al procedimiento de convocatoria?",
-    o:["La sesión extraordinaria se convoca con los mismos plazos y procedimientos que la ordinaria; la única diferencia es su nombre.",
-       "La sesión extraordinaria puede convocarse cuando existe un asunto urgente que no puede esperar a la siguiente sesión ordinaria; el plazo de convocatoria es más corto que el ordinario, el orden del día se limita al asunto urgente que la motivó y puede realizarse en cualquier momento del año, a diferencia de la ordinaria que tiene fechas fijas.",
-       "La sesión extraordinaria solo puede convocarse con autorización previa del Consejo General del INE y requiere unanimidad de todos los vocales para instalarse."],
-    c:1,
-    ex:"El Reglamento de Sesiones distingue por su urgencia: la sesión ordinaria tiene calendario fijo y plazos amplios de convocatoria; la extraordinaria se activa ante asuntos urgentes con menor anticipación y tiene un orden del día restringido al motivo que la originó. Esto permite a la Junta Distrital responder ágilmente ante contingencias (crisis de capacitación, incidentes graves, resoluciones urgentes) sin esperar la siguiente sesión programada." },
+  // === 1.3 — RELACIONA: órgano / característica ===
+  {sa:"1.3",sal:"Consejos locales y distritales",area:"Estructura del INE",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Órgano o cargo distrital</th><th colspan="2">Característica</th></tr></thead><tbody>
+<tr><td>1.</td><td>Junta Distrital Ejecutiva</td><td>a)</td><td>Se instala en octubre del año previo a la elección; integrado por un consejero presidente y seis consejeros electorales con voto</td></tr>
+<tr><td>2.</td><td>Consejo Distrital</td><td>b)</td><td>Órgano permanente presidido por el Vocal Ejecutivo; carácter técnico-operativo</td></tr>
+<tr><td>3.</td><td>Vocal Secretario/a</td><td>c)</td><td>Desempeña la secretaría del Consejo Distrital durante el proceso electoral</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada órgano o cargo distrital con su característica correcta:",
+   o:["1b, 2a, 3c","1a, 2b, 3c","1c, 2a, 3b"],
+   c:0,ex:"La Junta Distrital Ejecutiva (1b) es permanente y técnico-operativa. El Consejo Distrital (2a) es temporal, se instala antes de la elección con consejeros con voto. El Vocal Secretario/a (3c) actúa como secretario del Consejo Distrital durante el proceso."},
 
-  { sa:"1.3", sal:"Estructura interna", area:"Marco normativo e institucional",
-    src:"LGIPE (2024), Arts. 125–145; IFE (2008). Reglamento de Sesiones",
-    p:"La Junta Distrital Ejecutiva y el Consejo Distrital son los dos órganos que operan a nivel distrital durante el proceso electoral. El Reglamento de Sesiones rige el funcionamiento de la Junta; el Consejo tiene sus propias reglas de operación.",
-    pt:"Diferencia entre la Junta Distrital y el Consejo Distrital",
-    q:"¿Cuál es la diferencia fundamental en la naturaleza jurídica y el ámbito de actuación entre la Junta Distrital Ejecutiva y el Consejo Distrital?",
-    o:["Son el mismo órgano con distintos nombres; la diferencia es solo protocolar.",
-       "La Junta Distrital Ejecutiva es el órgano permanente ejecutivo integrado por los vocales del SPEN; opera todo el año con funciones técnicas y operativas. El Consejo Distrital es el órgano temporal colegiado que se instala durante el proceso electoral para tomar decisiones directivas y normativas en el distrito; incluye consejeros distritales ciudadanos que aportan deliberación pública a los actos electorales.",
-       "El Consejo Distrital tiene mayor jerarquía que la Junta Distrital porque es un órgano del TEPJF."],
-    c:1,
-    ex:"La distinción es estructural y funcional: la Junta (permanente, técnica, formada por el SPEN) garantiza continuidad operativa. El Consejo (temporal, colegiado, con participación ciudadana) garantiza la legitimidad democrática de las decisiones electorales. El Vocal de Capacitación sirve a ambos órganos en sus respectivos ámbitos: opera en la Junta cotidianamente y apoya técnicamente al Consejo durante el proceso." },
+  // === 2.1 ACTIVIDADES DE PREPARACIÓN (3) ===
+  {sa:"2.1",sal:"Actividades de preparación de la elección",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es la diferencia entre el Padrón Electoral y el Listado Nominal de Electores?",
+   o:["Son sinónimos; ambos refieren exactamente a la misma base de datos del INE.",
+      "El Padrón Electoral incluye a todos los ciudadanos mayores de 18 años; el Listado Nominal solo a quienes votaron en la elección federal anterior.",
+      "El Padrón Electoral es la base de datos de todos los ciudadanos inscritos; el Listado Nominal contiene solo a quienes tienen credencial para votar vigente y pueden participar en una elección específica."],
+   c:2,ex:"El Padrón Electoral es el registro de todos los ciudadanos que han solicitado su inscripción. El Listado Nominal se obtiene del Padrón y contiene solo a quienes tienen credencial para votar vigente; es el documento que se usa en casilla para verificar el derecho a votar."},
 
-  /* ══════════════════════════════════════════════════
-     2.1  SELECCIÓN DE FUNCIONARIOS DE CASILLA  (4)
-  ══════════════════════════════════════════════════ */
-  { sa:"2.1", sal:"Selección de funcionarios de casilla", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 166–186; INE/CG602/2023",
-    p:"El Acuerdo INE/CG602/2023 aprobó los Lineamientos para la organización del voto de personas en prisión preventiva. Este mecanismo requiere que la VCEyEC capacite a funcionarios de casilla especiales para operar en los centros penitenciarios.",
-    pt:"Voto en prisión preventiva — capacitación especializada",
-    q:"¿Cuál es la diferencia entre los criterios de selección de funcionarios de casilla ordinarios y los funcionarios de casilla para el voto en prisión preventiva, conforme al Acuerdo INE/CG602/2023?",
-    o:["Son exactamente los mismos criterios; no existe diferencia en el proceso de selección.",
-       "Para las casillas en centros penitenciarios se aplican criterios adicionales: los funcionarios no deben tener vínculos con los reclusos ni antecedentes que generen conflicto de interés; se requiere coordinación con las autoridades penitenciarias para la acreditación de ingreso; y la capacitación debe incluir los protocolos de seguridad del centro y las particularidades del listado nominal de las personas privadas de libertad en prisión preventiva.",
-       "Los funcionarios para casillas en centros penitenciarios son designados directamente por el director del centro sin participación del INE."],
-    c:1,
-    ex:"El Acuerdo INE/CG602/2023 (dictado en cumplimiento de la sentencia Sup-JDC-352/2018) establece un modelo operativo específico para el voto en prisión preventiva. La selección de funcionarios exige verificación de idoneidad por el entorno penitenciario (sin vínculos con reclusos), coordinación de acreditación con las autoridades del centro, y capacitación adicional en los protocolos del recinto. La VCEyEC es el actor central de este proceso." },
+  {sa:"2.1",sal:"Actividades de preparación de la elección",area:"Proceso electoral",cx:false,
+   p:"Durante la etapa de preparación de la elección, el INE publica y distribuye el catálogo de casillas para que partidos políticos y ciudadanos puedan verificar la ubicación de cada una.",
+   pt:"Aprobación y publicación de casillas",mt:null,
+   q:"¿Qué puede hacer un partido político que considere que una casilla fue aprobada en un lugar que no cumple los requisitos legales?",
+   o:["Presentar una inconformidad ante el Consejo Distrital dentro del plazo legal para que se modifique la ubicación.",
+      "Acudir directamente ante el TEPJF mediante un Juicio de Revisión Constitucional (JRC) para impugnar la ubicación.",
+      "No puede hacer nada; una vez aprobada por el Consejo Distrital, la decisión sobre casillas es definitiva e inapelable."],
+   c:0,ex:"Los partidos políticos pueden presentar inconformidades ante el Consejo Distrital respecto a la ubicación o características de las casillas aprobadas, dentro de los plazos que establece la LGIPE. El Consejo Distrital debe resolver y, en su caso, modificar o ratificar la casilla."},
 
-  { sa:"2.1", sal:"Selección de funcionarios de casilla", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 166–180",
-    p:"El proceso de insaculación tiene dos etapas. En la segunda insaculación el Consejo Distrital asigna formalmente a los ciudadanos capacitados a cada casilla y cargo. La lista de reserva garantiza la cobertura ante bajas.",
-    pt:"Segunda insaculación y lista de reserva",
-    q:"¿Qué ocurre jurídicamente si, al momento de la segunda insaculación, un ciudadano insaculado en la primera etapa ha sido localizado y capacitado pero manifiesta ante notario que no puede cumplir la función?",
-    o:["La segunda insaculación se suspende hasta que ese ciudadano confirme su participación.",
-       "El ciudadano es sustituido formalmente por el siguiente en la lista de reserva correspondiente a su sección; el Consejo Distrital registra la baja y designa al sustituto en el mismo acto o en resolución posterior, garantizando que la casilla quede integrada con los siete cargos cubiertos antes de la jornada.",
-       "El ciudadano que manifiesta imposibilidad puede ser sancionado penalmente antes de ser sustituido."],
-    c:1,
-    ex:"La manifestación de imposibilidad con antelación suficiente activa la sustitución formal por la lista de reserva. El Consejo Distrital la registra y designa al sustituto, que debe ser capacitado con el tiempo restante. La segunda insaculación no se suspende: se continúa con los candidatos disponibles. La sanción penal solo aplica si hay abandono injustificado el día de la jornada, no ante baja justificada previa." },
+  // === 2.1 — RELACIONA: herramienta / uso ===
+  {sa:"2.1",sal:"Actividades de preparación de la elección",area:"Proceso electoral",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Herramienta o instrumento</th><th colspan="2">Uso o propósito</th></tr></thead><tbody>
+<tr><td>1.</td><td>Listado Nominal</td><td>a)</td><td>Reportar en tiempo real la instalación de casillas e incidencias durante la jornada</td></tr>
+<tr><td>2.</td><td>SIJE</td><td>b)</td><td>Difundir datos preliminares de resultados la noche de la elección (sin valor jurídico definitivo)</td></tr>
+<tr><td>3.</td><td>PREP</td><td>c)</td><td>Verificar en casilla que el ciudadano tiene credencial vigente y derecho a sufragar</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada herramienta electoral con su uso correcto:",
+   o:["1c, 2a, 3b","1a, 2b, 3c","1b, 2c, 3a"],
+   c:0,ex:"El Listado Nominal (1c) se usa en casilla para verificar el derecho a votar. El SIJE (2a) reporta en tiempo real incidencias de la jornada. El PREP (3b) difunde resultados preliminares sin valor jurídico definitivo. Son instrumentos complementarios con propósitos distintos."},
 
-  { sa:"2.1", sal:"Selección de funcionarios de casilla", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 166–186",
-    p:"Una ciudadana insaculada para ser Presidenta de MDC informa al CAE durante la segunda visita que trabaja en una empresa cuyo gerente es candidato a diputado federal en ese distrito.",
-    pt:"Inelegibilidad sobreviniente por vínculo con candidato",
-    q:"¿Cuál es la determinación correcta del CAE y la VCEyEC ante esta situación?",
-    o:["El vínculo laboral no genera inelegibilidad; la ciudadana puede continuar como funcionaria de casilla.",
-       "La VCEyEC debe evaluar si ese vínculo laboral constituye una causa de inelegibilidad prevista en la LGIPE (relación de dependencia con candidato); si se acredita que la ciudadana tiene una relación laboral de subordinación directa con el candidato, debe registrarse como baja por inelegibilidad y activar la sustitución con la lista de reserva, reportando el caso al Consejo Distrital.",
-       "La VCEyEC debe esperar a que el candidato pierda las elecciones antes de tomar cualquier decisión."],
-    c:1,
-    ex:"La LGIPE establece causales de inelegibilidad para funcionarios de MDC, entre ellas ser empleado de un candidato o partido. Si la relación laboral implica dependencia directa con el candidato, la ciudadana es inelegible. La VCEyEC no puede ignorarlo: debe documentar el caso, reportar al Consejo Distrital y activar la sustitución. Actuar con anticipación protege la validez de los actos de esa casilla." },
+  // === 2.2 MODALIDADES DE VOTO ANTICIPADO (3) ===
+  {sa:"2.2",sal:"Modalidades de voto anticipado",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué diferencia existe entre el voto anticipado en domicilio y el voto en casillas especiales?",
+   o:["El voto en domicilio es para ciudadanos con discapacidad o adultos mayores de 60 años que no pueden ir a su casilla; las casillas especiales son para ciudadanos que están fuera de su sección el día de la jornada.",
+      "El voto en domicilio es para mexicanos residentes en el extranjero; las casillas especiales atienden exclusivamente a ciudadanos hospitalizados.",
+      "Ambas modalidades sirven al mismo perfil de ciudadano; la diferencia es únicamente el método de entrega de la boleta al INE."],
+   c:0,ex:"El voto anticipado en domicilio atiende a ciudadanos con discapacidad o adultos mayores de 60 años que no pueden desplazarse a su casilla. Las casillas especiales permiten votar a ciudadanos que, por razones de trabajo o tránsito, se encuentran fuera de su sección el día de la jornada."},
 
-  { sa:"2.1", sal:"Selección de funcionarios de casilla", area:"Capacitación electoral",
-    src:"INE/CG602/2023 — Voto en prisión preventiva",
-    p:"El Acuerdo INE/CG602/2023 establece que las personas en prisión preventiva tienen derecho al voto. Para ejercerlo se instalan casillas especiales dentro de los centros penitenciarios.",
-    pt:"Características del listado nominal para casillas en centros penitenciarios",
-    q:"¿Cómo se conforma el listado nominal de electores para las casillas instaladas en centros penitenciarios, conforme al Acuerdo INE/CG602/2023?",
-    o:["Se usa el listado nominal general del distrito donde se ubica el penal sin ninguna modificación.",
-       "El INE elabora un listado nominal especial con los datos de las personas en prisión preventiva que tienen credencial para votar vigente y cuya sección electoral corresponde a algún distrito del estado donde se ubica el centro; este listado especial se actualiza para cada proceso electoral considerando los ingresos y egresos del centro.",
-       "Los internos en prisión preventiva votan con una credencial provisional que el INE emite el día de la jornada sin necesidad de estar en ningún listado."],
-    c:1,
-    ex:"El Acuerdo INE/CG602/2023 establece un procedimiento especial: el listado nominal para estas casillas se forma exclusivamente con las personas que se encuentran en prisión preventiva (no sentenciadas) al momento del corte, que tienen credencial para votar vigente. Este listado especial es elaborado por el INE en coordinación con las autoridades penitenciarias y es distinto al listado nominal ordinario." },
+  // === 2.2 — RELACIONA: modalidad / perfil de ciudadano ===
+  {sa:"2.2",sal:"Modalidades de voto anticipado",area:"Proceso electoral",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Modalidad de voto</th><th colspan="2">Perfil del ciudadano que la usa</th></tr></thead><tbody>
+<tr><td>1.</td><td>Voto anticipado en domicilio</td><td>a)</td><td>Ciudadano fuera de su sección electoral el día de la jornada (tránsito, trabajo)</td></tr>
+<tr><td>2.</td><td>Casilla especial</td><td>b)</td><td>Ciudadano mexicano residente fuera del país, inscrito en la Lista Nominal del Extranjero</td></tr>
+<tr><td>3.</td><td>Voto desde el extranjero</td><td>c)</td><td>Ciudadano con discapacidad o adulto mayor de 60 años que no puede desplazarse a votar</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada modalidad de voto con el perfil del ciudadano que tiene derecho a utilizarla:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1b, 2a, 3c"],
+   c:0,ex:"Voto en domicilio (1c): ciudadanos con discapacidad o adultos mayores de 60 años. Casilla especial (2a): ciudadanos fuera de su sección por trabajo o tránsito, con límite de 300 votos. Voto desde el extranjero (3b): mexicanos residentes en el extranjero inscritos en la Lista Nominal del Extranjero."},
 
-  /* ══════════════════════════════════════════════════
-     2.2  PROCESO DE CAPACITACIÓN  (4)
-  ══════════════════════════════════════════════════ */
-  { sa:"2.2", sal:"Proceso de capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210; INE/CG602/2023",
-    p:"La capacitación para el voto en prisión preventiva requiere adaptar los materiales y las técnicas al entorno penitenciario y al perfil de los funcionarios de casilla que operarán en ese contexto.",
-    pt:"Adaptación de la capacitación al entorno penitenciario",
-    q:"¿Cuáles son los ajustes específicos que la VCEyEC debe hacer en el proceso de capacitación para las casillas en centros penitenciarios, respecto a las casillas ordinarias?",
-    o:["No se requiere ningún ajuste; la capacitación es idéntica para todos los funcionarios de casilla.",
-       "La VCEyEC debe adaptar: los materiales para incluir los protocolos de seguridad del centro; las sesiones de capacitación deben realizarse dentro del penal con autorización de las autoridades penitenciarias; se debe capacitar a los funcionarios en el manejo del listado nominal especial y en los procedimientos de verificación de identidad de personas privadas de libertad; y se deben contemplar restricciones de ingreso de materiales al penal.",
-       "La capacitación para centros penitenciarios es responsabilidad de la Secretaría de Seguridad; la VCEyEC no interviene."],
-    c:1,
-    ex:"El modelo operativo del Acuerdo INE/CG602/2023 reconoce las especificidades del entorno penitenciario: acceso controlado, restricciones de materiales, verificación de identidad distinta a la ordinaria, y dinámicas de seguridad propias. La VCEyEC debe coordinar con las autoridades del centro para adaptar las sesiones de capacitación a esas condiciones sin comprometer la calidad de la formación." },
+  {sa:"2.2",sal:"Modalidades de voto anticipado",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es el límite de votos que puede recibir una casilla especial y por qué existe ese límite?",
+   o:["500 votos, para evitar largas filas en los puntos de alta afluencia electoral.",
+      "300 votos, para garantizar que el escrutinio pueda realizarse en tiempo razonable y mantener el control de las boletas especiales.",
+      "200 votos, límite establecido para equilibrar la carga de trabajo entre todas las casillas del distrito."],
+   c:1,ex:"Cada casilla especial tiene un límite de 300 votos por elección. Una vez agotado ese número, la casilla deja de recibir votantes para esa elección. El límite garantiza la integridad del escrutinio y el control del material electoral en esas casillas de alta movilidad."},
 
-  { sa:"2.2", sal:"Proceso de capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210",
-    p:"Durante el proceso de capacitación, el CAE documenta cada visita en el sistema de gestión del INE. La documentación debe reflejar fielmente lo ocurrido en cada contacto con el ciudadano insaculado.",
-    pt:"Registro de visitas y consecuencias de información falsa",
-    q:"¿Cuáles son las consecuencias jurídicas y operativas de que un CAE registre en el sistema visitas que no realizó o capacitaciones que no impartió?",
-    o:["Solo genera una llamada de atención verbal del Supervisor; no tiene consecuencias graves.",
-       "Registrar actos no realizados constituye una falsedad en documentos del INE, que puede derivar en: terminación del contrato del CAE, responsabilidad penal por falsificación de documentos, invalidación de las actas de integración de MDC firmadas falsamente, y riesgo de impugnación de los resultados de las casillas afectadas si en la jornada se detecta que los funcionarios no recibieron capacitación efectiva.",
-       "Solo tiene consecuencias para la VCEyEC pero no para el CAE que registró la información falsa."],
-    c:1,
-    ex:"La falsedad en los registros del sistema de capacitación tiene consecuencias en cascada: responsabilidad contractual y penal del CAE, invalidación de las actas de integración, y vulnerabilidad de las casillas afectadas ante impugnaciones. La jurisprudencia del TEPJF ha establecido que la falta de capacitación efectiva puede ser causa de nulidad de casilla si se prueba que los funcionarios no conocían los procedimientos." },
+  // === 2.3 PROCESO ELECTORAL DEL PJF (1) ===
+  {sa:"2.3",sal:"Proceso electoral del Poder Judicial de la Federación",area:"Proceso electoral",cx:false,
+   p:"La reforma judicial de 2024 implicó que, por primera vez en la historia de México, los cargos del Poder Judicial Federal serían electos por voto ciudadano directo, lo que generó nuevas responsabilidades para el INE.",
+   pt:"Elecciones del PJF — reforma 2024",mt:null,
+   q:"¿Cuál es el papel específico del INE en la organización de las elecciones de los integrantes del Poder Judicial Federal?",
+   o:["El INE organiza íntegramente el proceso: convocatoria, registro de candidatos, logística de casillas, cómputos y declaración de validez, con las mismas atribuciones que en una elección federal ordinaria.",
+      "El INE solo presta apoyo logístico; la organización integral la conduce el Comité de Evaluación del PJF, que es la autoridad rectora.",
+      "El INE únicamente verifica la identidad de los candidatos propuestos por los Poderes de la Unión, sin organizar la jornada electoral del PJF."],
+   c:0,ex:"Tras la reforma de 2024, el INE asumió la organización completa de las elecciones judiciales: convocatoria, registro, logística, jornada, cómputos y declaración de validez. Es una nueva atribución que se ejerce con el mismo marco normativo que las elecciones federales ordinarias."},
 
-  { sa:"2.2", sal:"Proceso de capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210; INE (2020) Reglamento de Quejas — VPcM",
-    p:"Durante las sesiones de capacitación grupal, el CAE debe mantener un ambiente seguro y libre de discriminación. La VPcM puede manifestarse en el entorno de las actividades de capacitación.",
-    pt:"Prevención de VPcM en el entorno de capacitación",
-    q:"¿Qué conductas específicas en el entorno de la capacitación pueden constituir VPcM conforme al Reglamento de Quejas y Denuncias del INE (2020)?",
-    o:["Solo las conductas de violencia física ocurridas dentro de las instalaciones del INE constituyen VPcM.",
-       "El Reglamento contempla conductas como: comentarios sexistas o descalificadores hacia las funcionarias capacitadas, obstaculizar la participación de mujeres en las sesiones, amenazas o presiones para que renuncien a su designación como funcionarias de casilla, y acoso en el contexto de las visitas del CAE. Estas conductas pueden ser denunciadas ante el INE aunque no ocurran en instalaciones oficiales.",
-       "El Reglamento de Quejas solo aplica a candidatas y representantes de partido; no protege a las funcionarias de casilla."],
-    c:1,
-    ex:"El Reglamento de Quejas y Denuncias en Materia de VPcM (INE, 2020) protege a las mujeres en el ámbito electoral, incluyendo a las funcionarias de casilla. Conductas como la descalificación sexista, la obstaculización de su participación o el acoso durante las visitas del CAE pueden ser denunciadas ante el INE. La VCEyEC debe conocer estas conductas para prevenirlas activamente y atender denuncias." },
+  // === 2.4 ATRIBUCIONES ESPECIALES DEL INE (3) ===
+  {sa:"2.4",sal:"Atribuciones especiales del INE",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿En qué se distingue la 'atracción' de la 'delegación' como atribuciones especiales del INE respecto a los OPLEs?",
+   o:["Son sinónimas; en ambos casos el INE reemplaza permanentemente al OPLE en todas sus funciones locales.",
+      "En la delegación el INE transfiere de forma permanente sus funciones federales al OPLE; en la atracción el OPLE transfiere permanentemente sus funciones al INE.",
+      "En la atracción el INE asume la organización de una elección local que corresponde al OPLE; en la delegación el INE encomienda al OPLE tareas de elecciones federales, bajo supervisión del INE."],
+   c:2,ex:"La atracción opera de OPLE hacia INE: el INE toma el control de una elección local. La delegación opera de INE hacia OPLE: el INE le encomienda tareas concretas en elecciones federales. En ambos casos el INE mantiene la responsabilidad final y la supervisión."},
 
-  { sa:"2.2", sal:"Proceso de capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 166–210",
-    p:"La segunda insaculación se realiza públicamente ante el Consejo Distrital. La VCEyEC presenta el universo de ciudadanos capacitados y aptos para que el Consejo asigne los cargos mediante el sorteo.",
-    pt:"Preparación de la segunda insaculación por la VCEyEC",
-    q:"¿Qué información debe presentar el Vocal de Capacitación ante el Consejo Distrital en la segunda insaculación para que el acto sea válido?",
-    o:["Solo los nombres de los ciudadanos; no se requiere ninguna documentación adicional.",
-       "El Vocal de Capacitación debe presentar: el universo de ciudadanos capacitados con acta de integración firmada, el registro de visitas y sesiones de capacitación impartidas, las bajas justificadas con su causa y el ciudadano sustituto ya capacitado, y las actas de los ciudadanos inelegibles o no localizados. Esta documentación soporta la legalidad del acto de insaculación ante posibles impugnaciones.",
-       "El Consejo General determina directamente la segunda insaculación sin que el Vocal de Capacitación presente ningún informe."],
-    c:1,
-    ex:"La segunda insaculación es un acto de autoridad del Consejo Distrital que se apoya en el trabajo previo de la VCEyEC. El informe que presenta el Vocal de Capacitación es el soporte documental del acto: sin él, el Consejo no puede verificar que el universo de ciudadanos a insacular es legalmente válido. La solidez de ese informe determina la resistencia del proceso ante impugnaciones." },
+  // === 2.4 — RELACIONA: atribución / dirección del flujo ===
+  {sa:"2.4",sal:"Atribuciones especiales del INE",area:"Proceso electoral",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Atribución especial del INE</th><th colspan="2">Descripción</th></tr></thead><tbody>
+<tr><td>1.</td><td>Atracción</td><td>a)</td><td>INE → OPLE: encomienda tareas específicas de elecciones federales bajo supervisión del INE</td></tr>
+<tr><td>2.</td><td>Delegación</td><td>b)</td><td>Fiscaliza origen, monto y destino de todos los recursos de partidos y candidatos (público y privado)</td></tr>
+<tr><td>3.</td><td>Fiscalización</td><td>c)</td><td>OPLE → INE: el INE asume la organización de una elección local que correspondía al OPLE</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada atribución especial del INE con su descripción correcta:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1b, 2a, 3c"],
+   c:0,ex:"Atracción (1c): el INE toma el control de elecciones locales que corresponden al OPLE. Delegación (2a): el INE encomienda tareas federales al OPLE bajo su supervisión. Fiscalización (3b): el INE revisa el origen, monto y destino de todos los recursos de partidos y candidatos."},
 
-  /* ══════════════════════════════════════════════════
-     2.3  MATERIALES Y TÉCNICAS DIDÁCTICAS  (3)
-  ══════════════════════════════════════════════════ */
-  { sa:"2.3", sal:"Materiales y técnicas didácticas", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210; INE/CG602/2023",
-    p:"Los materiales de capacitación para el voto en prisión preventiva deben adaptarse a las restricciones de ingreso de los centros penitenciarios (prohibición de ciertos objetos, revisiones de seguridad) y a las características de la población objetivo.",
-    pt:"Materiales de capacitación en entorno penitenciario",
-    q:"¿Qué adaptaciones específicas de los materiales del Kit Electoral son necesarias para las sesiones de capacitación en centros penitenciarios?",
-    o:["Los materiales son idénticos; el Kit Electoral no necesita ninguna adaptación para el entorno penitenciario.",
-       "Deben eliminarse o sustituirse los materiales cuyo ingreso está restringido por los protocolos de seguridad del penal (objetos cortantes, metálicos, electrónicos); los materiales de práctica pueden ser réplicas en cartón o papel; la documentación electoral debe estar adaptada al listado nominal especial de personas en prisión preventiva; y se debe incluir información sobre el proceso específico de identificación de los electores en ese entorno.",
-       "En los centros penitenciarios solo se pueden usar materiales digitales en tablet porque los físicos están prohibidos."],
-    c:1,
-    ex:"El modelo operativo del Acuerdo INE/CG602/2023 reconoce las restricciones de seguridad de los penales. La adaptación de materiales es una condición de acceso: sin ella, el CAE no puede realizar la capacitación. Las réplicas en materiales no restringidos, combinadas con la documentación específica del proceso de voto en prisión preventiva, garantizan que la capacitación sea efectiva dentro de los límites del entorno." },
+  {sa:"2.4",sal:"Atribuciones especiales del INE",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué son los tiempos oficiales en radio y televisión que administra el INE?",
+   o:["El tiempo que el INE compra directamente a las cadenas de radio y TV para difundir propaganda del gobierno federal.",
+      "Los espacios en radio y TV que el Estado tiene por ley y que el INE distribuye gratuitamente entre partidos, candidatos y la propia autoridad electoral para difusión político-electoral.",
+      "Los minutos de cobertura informativa que los medios de comunicación deben dedicar obligatoriamente a los partidos de manera proporcional."],
+   c:1,ex:"El Art. 41 CPEUM otorga al Estado tiempos en radio y televisión. El INE administra y distribuye esos tiempos entre los partidos, candidatos y el propio instituto para propaganda electoral, prohibiéndose la contratación privada de tiempo adicional durante las campañas."},
 
-  { sa:"2.3", sal:"Materiales y técnicas didácticas", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210",
-    p:"La VCEyEC organiza sesiones de capacitación grupal como complemento a las visitas domiciliarias individuales del CAE. Las sesiones grupales tienen ventajas logísticas pero también riesgos específicos.",
-    pt:"Sesiones grupales vs. visitas domiciliarias individuales",
-    q:"¿Cuál es el riesgo operativo específico de las sesiones grupales que hace necesario que la VCEyEC las complemente con visitas individuales del CAE?",
-    o:["Las sesiones grupales no tienen ningún riesgo; son más efectivas que las visitas individuales.",
-       "Las sesiones grupales pueden generar un efecto de asistencia aparente sin aprendizaje real: un ciudadano puede firmar el registro de asistencia sin haber comprendido los procedimientos si la sesión es muy numerosa o el CAE no verifica individualmente el nivel de comprensión. La visita individual permite al CAE verificar personalmente que cada ciudadano comprende su cargo específico y puede operar la casilla.",
-       "Las sesiones grupales están prohibidas por el Reglamento de Elecciones; solo se permiten visitas domiciliarias."],
-    c:1,
-    ex:"La complementariedad entre sesiones grupales e individuales es operativamente esencial: la grupal es eficiente pero no garantiza la comprensión individual; la individual verifica pero es costosa en tiempo. El CAE debe usar las grupales para la instrucción general y las individuales para confirmar la comprensión del cargo específico (presidente, secretario, escrutador) y resolver dudas. La firma de asistencia no equivale a capacitación efectiva." },
+  // === 2.5 ACTIVIDADES DEL DÍA DE LA JORNADA (7) ===
+  {sa:"2.5",sal:"Actividades del día de la jornada electoral",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué acciones debe realizar el Presidente de casilla antes de las 8:00 horas para garantizar la instalación?",
+   o:["Verificar que tenga todos los materiales del paquete electoral, instalar la mampara, firmar el acta de instalación con los funcionarios presentes y declarar formalmente abierta la votación.",
+      "Solo colocar la urna y esperar a que lleguen los demás funcionarios y representantes de partidos.",
+      "Abrir el paquete electoral, contar individualmente todas las boletas y separarlas por tipo de elección antes de instalar la casilla."],
+   c:0,ex:"El Presidente debe: verificar la presencia de al menos dos funcionarios más, abrir el paquete electoral, instalar la mampara y urnas, firmar el acta de instalación con los funcionarios y representantes de partidos presentes, y declarar abierta la votación a las 8:00 horas."},
 
-  { sa:"2.3", sal:"Materiales y técnicas didácticas", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210; INE (2022) Protocolo atención VPcM",
-    p:"El Protocolo INE (2022) para la atención a víctimas de VPcM establece que los materiales de capacitación deben incorporar contenidos sobre derechos de las mujeres en el ámbito electoral.",
-    pt:"Incorporación de contenidos de VPcM en la capacitación",
-    q:"¿Por qué la VCEyEC debe incorporar en la capacitación a funcionarios de casilla información sobre VPcM, más allá de los procedimientos técnicos de la jornada?",
-    o:["Porque la LGIPE obliga a que todas las sesiones de capacitación duren al menos 4 horas y haya tiempo sobrante.",
-       "Porque las funcionarias de casilla pueden ser víctimas o testigos de VPcM durante la jornada; saber identificarla, no normalizarla y conocer el canal de denuncia (CAE, Supervisor, Junta Distrital) las protege y fortalece la integridad del proceso. El Protocolo INE 2022 reconoce que la prevención pasa por la formación de todos los actores en contacto con el proceso, incluidos los funcionarios de casilla.",
-       "Solo los Vocales Ejecutivos deben conocer el protocolo de VPcM; los funcionarios de casilla no tienen ninguna obligación en este ámbito."],
-    c:1,
-    ex:"El Protocolo INE 2022 tiene un enfoque preventivo: si los actores del proceso conocen qué es VPcM, pueden identificarla y reportarla. Las funcionarias de casilla están en primera línea y pueden ser objeto de presión, acoso o amenazas el día de la jornada. Capacitarlas en este tema no es un añadido opcional sino parte de la formación integral que garantiza que puedan ejercer su función en condiciones de seguridad." },
+  // === 2.5 — RELACIONA: tipo de voto / definición ===
+  {sa:"2.5",sal:"Actividades del día de la jornada electoral",area:"Proceso electoral",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Tipo de voto</th><th colspan="2">Definición y tratamiento en el escrutinio</th></tr></thead><tbody>
+<tr><td>1.</td><td>Voto válido</td><td>a)</td><td>Representante de partido lo cuestiona durante el escrutinio; se separa y lo resuelve el Consejo Distrital</td></tr>
+<tr><td>2.</td><td>Voto nulo</td><td>b)</td><td>La voluntad del ciudadano es inequívoca aunque la marca no esté exactamente dentro del recuadro</td></tr>
+<tr><td>3.</td><td>Voto impugnado</td><td>c)</td><td>Tiene marcas para dos o más partidos, o carece de marca; se contabiliza separado sin asignarse a ningún partido</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada tipo de voto con su definición y tratamiento en el escrutinio:",
+   o:["1b, 2c, 3a","1a, 2b, 3c","1c, 2a, 3b"],
+   c:0,ex:"Voto válido (1b): la intención es inequívoca aunque la marca no esté en el recuadro. Voto nulo (2c): marcas para dos o más partidos o sin marca; se contabiliza por separado. Voto impugnado (3a): lo cuestiona un representante de partido en el escrutinio y lo resuelve el Consejo Distrital."},
 
-  /* ══════════════════════════════════════════════════
-     2.4  SUPERVISIÓN Y CONTROL  (3)
-  ══════════════════════════════════════════════════ */
-  { sa:"2.4", sal:"Supervisión y control de la capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210; INE (2023) Lineamientos para cómputos distritales PEF 2023-2024",
-    p:"Los Lineamientos para la preparación y desarrollo de los cómputos distritales (INE, 2023) establecen que la calidad de la capacitación de los funcionarios de casilla determina directamente la confiabilidad de los cómputos.",
-    pt:"Vínculo entre calidad de capacitación y cómputos distritales",
-    q:"¿De qué manera concreta la calidad del trabajo de capacitación de la VCEyEC afecta el desarrollo de los Cómputos Distritales conforme a los Lineamientos INE 2023?",
-    o:["La calidad de la capacitación no tiene ninguna relación con los Cómputos Distritales.",
-       "Los Lineamientos establecen que los errores en el llenado de actas (escrutinio, votación, instalación) son la principal causa de discrepancias que activan recuentos parciales o totales. Un funcionario de casilla bien capacitado llena correctamente las actas, reduce las inconsistencias y disminuye la probabilidad de recuentos y de impugnaciones posteriores. La VCEyEC es así un factor clave de la fluidez y confiabilidad de los Cómputos.",
-       "La relación es inversa: mejor capacitación genera más recuentos porque los funcionarios detectan más errores."],
-    c:1,
-    ex:"Los Lineamientos de Cómputos 2023 reconocen explícitamente que las inconsistencias en las actas son el principal detonador de recuentos. La VCEyEC cierra el círculo: capacitación de calidad = actas correctas = cómputos fluidos = menor probabilidad de impugnación. Un rezago o una capacitación deficiente se traduce directamente en mayor carga de trabajo para los Consejos Distritales y mayor vulnerabilidad del resultado." },
+  {sa:"2.5",sal:"Actividades del día de la jornada electoral",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿En qué casos puede un ciudadano ser rechazado en la casilla sin poder votar?",
+   o:["Si llega después de las 18:00 horas y la fila ya se ha disuelto completamente.",
+      "Si no porta su credencial para votar, o su nombre no aparece en el listado nominal, o en casilla especial ya se agotó el límite de 300 votos.",
+      "Si el funcionario de casilla considera subjetivamente que el ciudadano está bajo efectos del alcohol o drogas."],
+   c:1,ex:"Un ciudadano puede ser rechazado si: no presenta su credencial para votar, su nombre no aparece en el listado nominal de esa sección (salvo casillas especiales), o si en casilla especial ya se alcanzó el límite de 300 votos. El funcionario no puede rechazar a un ciudadano por criterios subjetivos."},
 
-  { sa:"2.4", sal:"Supervisión y control de la capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024), Arts. 190–210",
-    p:"El Vocal de Capacitación recibe un reporte de que varios CAE en zonas de difícil acceso geográfico del distrito no están pudiendo cumplir con las visitas requeridas por las distancias y la falta de transporte.",
-    pt:"Gestión de brechas geográficas en la capacitación",
-    q:"¿Qué acciones debe implementar la VCEyEC para garantizar la capacitación en zonas de difícil acceso geográfico?",
-    o:["No hay solución posible; las zonas de difícil acceso no pueden ser cubiertas y las casillas en esas secciones deben cancelarse.",
-       "La VCEyEC debe: identificar las secciones con dificultad de acceso desde el inicio del proceso; gestionar ante la Junta Distrital los recursos de transporte necesarios; coordinar con autoridades municipales o comunitarias el apoyo logístico; implementar rutas de capacitación grupales en puntos de reunión comunitarios para reducir traslados; y reportar a la Junta Local si la problemática supera la capacidad de la Junta Distrital.",
-       "En zonas de difícil acceso, los funcionarios de casilla pueden ser designados directamente por el presidente municipal sin pasar por el proceso de insaculación."],
-    c:1,
-    ex:"La dificultad de acceso no exime de la obligación de capacitar; la VCEyEC debe resolverla operativamente. La gestión de transporte, la coordinación comunitaria y las sesiones grupales en puntos accesibles son las herramientas disponibles. Si la Junta Distrital no puede resolverlo sola, debe escalar a la Junta Local. Dejar secciones sin capacitar comprometería la integración de esas casillas y podría derivar en incidencias el día de la jornada." },
+  {sa:"2.5",sal:"Actividades del día de la jornada electoral",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué debe hacer el Presidente de casilla si se presenta un incidente de alteración del orden durante la votación?",
+   o:["Suspender definitivamente la votación e informar de inmediato al Consejo Distrital para que tome la decisión final.",
+      "Solicitar el auxilio de la fuerza pública, registrar el incidente en el acta correspondiente y continuar la votación una vez restablecida la normalidad.",
+      "Continuar la votación sin documentar el incidente para no generar alarma entre los demás votantes."],
+   c:1,ex:"El Presidente de casilla debe solicitar el auxilio de la fuerza pública (policía), documentar el incidente en el acta de incidentes de la jornada y, restablecido el orden, continuar la votación. Solo se suspende de manera definitiva en casos extremos que impidan garantizar la seguridad de los votantes."},
 
-  { sa:"2.4", sal:"Supervisión y control de la capacitación", area:"Capacitación electoral",
-    src:"LGIPE (2024); INE (2020) Reglamento de Quejas — VPcM",
-    p:"Una Supervisora Electoral reporta al Vocal de Capacitación que un CAE ha estado haciendo comentarios inapropiados hacia las ciudadanas insaculadas durante las visitas domiciliarias.",
-    pt:"Actuación ante conductas inapropiadas del CAE",
-    q:"¿Cuál es la secuencia de acciones que debe seguir el Vocal de Capacitación ante este reporte?",
-    o:["Llamar la atención verbalmente al CAE y continuar con el proceso sin documentar el incidente.",
-       "Documentar el reporte de la Supervisora; entrevistar a las ciudadanas afectadas para confirmar los hechos; si se confirman conductas constitutivas de VPcM o acoso, activar el Reglamento de Quejas y Denuncias INE (2020), notificar al Vocal Ejecutivo, suspender las actividades del CAE mientras se investiga, reasignar su zona a otro CAE para no interrumpir la capacitación, y reportar el caso al área correspondiente del INE.",
-       "Esperar a que las propias ciudadanas presenten una queja formal antes de actuar."],
-    c:1,
-    ex:"El Reglamento de Quejas y Denuncias del INE (2020) establece que los funcionarios que conocen de posibles actos de VPcM o acoso tienen la obligación de documentarlos y activar el protocolo, sin esperar denuncia formal de la víctima. La acción inmediata protege a las ciudadanas, preserva la continuidad de la capacitación mediante reasignación y demuestra que el INE no tolera estas conductas en su personal temporal." },
+  {sa:"2.5",sal:"Actividades del día de la jornada electoral",area:"Proceso electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es el procedimiento correcto cuando, al abrir una urna para el escrutinio, se encuentran boletas de una elección diferente?",
+   o:["Separar las boletas por tipo de elección, contar cada grupo por separado y registrar el incidente en el acta, continuando el escrutinio normalmente.",
+      "Anular automáticamente todos los votos de esa urna por error de procedimiento, sin mayor análisis.",
+      "Mezclar todas las boletas y contarlas como válidas para la elección que corresponde a esa urna."],
+   c:0,ex:"Si se encuentran boletas de otra elección en una urna, los funcionarios deben separarlas, registrar el incidente en el acta correspondiente y continuar el escrutinio contando únicamente las boletas que correspondan a esa urna. Las boletas ajenas se registran como irregularidad pero no invalidan automáticamente el escrutinio."},
 
-  /* ══════════════════════════════════════════════════
-     3.1  INSTALACIÓN DE CASILLAS  (3)
-  ══════════════════════════════════════════════════ */
-  { sa:"3.1", sal:"Instalación de casillas", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 257–280; INE (2023) Lineamientos para cómputos distritales",
-    p:"Los Lineamientos para cómputos distritales (INE, 2023) establecen que las discrepancias en el Acta de Instalación pueden generar causales de recuento durante el Cómputo Distrital.",
-    pt:"Acta de Instalación y Cómputo Distrital",
-    q:"¿Qué información del Acta de Instalación es la que con mayor frecuencia genera discrepancias en los Cómputos Distritales conforme a los Lineamientos 2023?",
-    o:["El color de la urna instalada en la casilla.",
-       "La hora de instalación, la integración correcta de los cargos con los nombres correspondientes, y las firmas de los funcionarios; cualquier inconsistencia entre el Acta de Instalación y el Acta de la Jornada Electoral (por ejemplo, un funcionario que firma el Acta de Instalación pero no aparece en la de la Jornada) activa la revisión detallada del expediente durante el Cómputo.",
-       "Solo el número de la casilla; los demás datos del Acta de Instalación no son verificados durante los Cómputos."],
-    c:1,
-    ex:"Los Lineamientos de Cómputos 2023 identifican las inconsistencias en la identidad de los funcionarios (nombre incorrecto, firma de alguien que no integró la mesa, hora de instalación inverosímil) como detonadores frecuentes de revisión detallada. La VCEyEC puede reducir esta fuente de errores garantizando que los funcionarios capacitados conozcan con exactitud sus nombres tal como aparecen en los documentos electorales." },
+  // === 3.1 DELITOS EN MATERIA ELECTORAL (1) ===
+  {sa:"3.1",sal:"Delitos en materia electoral",area:"Justicia electoral",cx:false,
+   p:"La Ley General en Materia de Delitos Electorales (LGMDE) tipifica conductas que pueden cometer distintos actores durante el proceso electoral.",
+   pt:"Responsabilidad penal electoral",mt:null,
+   q:"Un vocal de organización filtra el listado nominal a un partido antes de su publicación oficial. ¿Qué tipo de responsabilidad enfrenta y ante qué autoridad?",
+   o:["Solo responsabilidad administrativa ante el INE, con posible destitución del cargo y sanción económica.",
+      "Responsabilidad civil únicamente, pues el daño es patrimonial para los partidos que no recibieron la información.",
+      "Responsabilidad penal por delito electoral ante la FISEL-FGR, y también responsabilidad administrativa ante el INE; ambas son independientes y pueden concurrir."],
+   c:2,ex:"Filtrar información del listado nominal es un delito electoral tipificado en la LGMDE. El funcionario enfrenta: 1) responsabilidad penal ante la FISEL (órgano de la FGR), y 2) responsabilidad administrativa ante el INE. Ambas son independientes y pueden concurrir simultáneamente."},
 
-  { sa:"3.1", sal:"Instalación de casillas", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 257–280; INE/CG602/2023",
-    p:"Las casillas instaladas en centros penitenciarios para el voto en prisión preventiva tienen procedimientos de apertura distintos a las casillas ordinarias, por las restricciones de acceso al penal.",
-    pt:"Instalación de casillas en centros penitenciarios",
-    q:"¿Cuál es la diferencia en el procedimiento de instalación de una casilla ordinaria y una casilla en un centro penitenciario, conforme al Acuerdo INE/CG602/2023?",
-    o:["El procedimiento es idéntico; la única diferencia es la ubicación física.",
-       "En el centro penitenciario, el acceso de los funcionarios de casilla debe coordinarse previamente con las autoridades del penal; el traslado de los materiales electorales requiere autorización y revisión de seguridad; la verificación de identidad de los electores usa el listado nominal especial y puede requerir el cotejo con los registros penitenciarios; y el CAE/Supervisor debe permanecer en un punto de coordinación externo al módulo de votación por restricciones de acceso.",
-       "En los centros penitenciarios no se instalan casillas físicas; el voto se ejerce mediante urna electrónica."],
-    c:1,
-    ex:"El Acuerdo INE/CG602/2023 reconoce las especificidades operativas del entorno penitenciario: acceso controlado, revisión de materiales, listado nominal especial y limitación de movilidad del personal de apoyo. La instalación requiere coordinación previa entre el INE y las autoridades penitenciarias, lo que obliga a la VCEyEC a gestionar esa coordinación con suficiente anticipación para no comprometer la instalación a las 8:00 horas." },
+  // === 3.2 MEDIOS DE IMPUGNACIÓN (2) — RELACIONA ===
+  {sa:"3.2",sal:"Medios de impugnación en materia electoral",area:"Justicia electoral",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Medio de impugnación</th><th colspan="2">Objeto y característica clave</th></tr></thead><tbody>
+<tr><td>1.</td><td>RIN</td><td>a)</td><td>Impugna resultados en actas de cómputo distrital; plazo de 4 días naturales desde el cómputo</td></tr>
+<tr><td>2.</td><td>JIN</td><td>b)</td><td>Protege derechos político-electorales individuales del ciudadano; lo interpone el propio ciudadano</td></tr>
+<tr><td>3.</td><td>JDC</td><td>c)</td><td>Impugna actos del Consejo Distrital o Local durante la preparación del proceso electoral</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada medio de impugnación con su objeto y característica principal:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1b, 2a, 3c"],
+   c:0,ex:"El RIN (1c) impugna actos del Consejo Distrital durante la preparación del proceso. El JIN (2a) impugna resultados en actas de cómputo distrital con plazo de 4 días naturales. El JDC (3b) protege los derechos político-electorales individuales de los ciudadanos ante el TEPJF."},
 
-  { sa:"3.1", sal:"Instalación de casillas", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 257–280",
-    p:"El día de la jornada, el CAE a cargo de una zona descubre que dos de las cinco casillas bajo su responsabilidad no han podido instalarse a las 8:30 horas porque ninguno de los funcionarios designados ni los suplentes se presentaron.",
-    pt:"Múltiples casillas sin instalar — crisis simultánea",
-    q:"¿Cuál es la secuencia de decisiones que debe tomar el CAE y el Vocal de Capacitación ante esta crisis simultánea?",
-    o:["El CAE debe elegir cuál casilla instalar primero y abandonar la otra hasta que algún funcionario llegue voluntariamente.",
-       "El CAE debe notificar de inmediato al Supervisor y a la Junta Distrital (Vocal de Capacitación); solicitar el apoyo de otro CAE o Supervisor para atender simultáneamente ambas casillas; designar ciudadanos de la fila que reúnan los requisitos para cada una siguiendo el orden establecido; y reportar el avance en tiempo real al Vocal de Capacitación, quien mantiene informado al Vocal Ejecutivo y coordina los recursos disponibles en el distrito.",
-       "La crisis con dos casillas simultáneas obliga automáticamente a cancelar ambas; no existe procedimiento para atenderlas."],
-    c:1,
-    ex:"La crisis simultánea no justifica el abandono de ninguna casilla. El procedimiento escala en paralelo: el CAE pide apoyo de inmediato; el Supervisor acude a la casilla que el CAE no puede atender; el Vocal de Capacitación coordina desde la Junta redistribuyendo recursos. La designación de ciudadanos de la fila se activa en ambas casillas simultáneamente. La comunicación en tiempo real es el eje de la respuesta efectiva." },
+  {sa:"3.2",sal:"Medios de impugnación en materia electoral",area:"Justicia electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es el plazo para interponer un Juicio de Inconformidad (JIN) contra los resultados del cómputo distrital?",
+   o:["Cuatro días naturales contados a partir del día siguiente a la conclusión del cómputo distrital.",
+      "Diez días hábiles a partir de la publicación de los resultados en el Diario Oficial de la Federación.",
+      "Treinta días naturales contados a partir de la jornada electoral."],
+   c:0,ex:"Conforme al Art. 8 de la LGSMIME, el plazo general para interponer medios de impugnación es de cuatro días naturales contados desde el día siguiente a aquel en que se tenga conocimiento del acto impugnado. Para el JIN, el plazo corre desde la conclusión del cómputo distrital."},
 
-  /* ══════════════════════════════════════════════════
-     3.2  SUSTITUCIÓN DE FUNCIONARIOS  (3)
-  ══════════════════════════════════════════════════ */
-  { sa:"3.2", sal:"Sustitución de funcionarios de casilla", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 302–320; LGMDE (2021)",
-    p:"Durante la jornada, el Presidente de una casilla es identificado por representantes de dos partidos como empleado de un candidato que compite en ese distrito. Los representantes exigen su retiro.",
-    pt:"Inelegibilidad detectada durante la jornada",
-    q:"¿Cuál es el procedimiento correcto cuando se detecta durante la jornada que un funcionario de casilla es inelegible por vínculo con un candidato?",
-    o:["Los representantes de partido no tienen facultades para exigir la remoción de un funcionario; la casilla continúa.",
-       "El CAE/Supervisor documenta la impugnación de los representantes en el Acta de Incidentes; si se acredita la inelegibilidad (el funcionario reconoce el vínculo o hay evidencia fehaciente), el Presidente de la MDC o, en su ausencia, el Secretario, procede a la sustitución siguiendo la cadena de suplencia; el incidente queda documentado para efectos del expediente de casilla y eventual revisión en el Cómputo Distrital.",
-       "La inelegibilidad detectada durante la jornada hace nula automáticamente la casilla sin posibilidad de corrección."],
-    c:1,
-    ex:"La detección en jornada no cancela la casilla automáticamente: activa el procedimiento de sustitución con documentación precisa. El Acta de Incidentes es el instrumento clave: registra el hecho, la evidencia presentada, la decisión tomada y la identidad del sustituto. Esta documentación es la que permitirá al Consejo Distrital evaluar la validez de la casilla durante el Cómputo si el asunto se lleva al TEPJF." },
+  // === 3.3 VIOLENCIA POLÍTICA CONTRA LAS MUJERES (4) ===
+  {sa:"3.3",sal:"Violencia política contra las mujeres en razón de género",area:"Justicia electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué elementos deben concurrir para que un acto se considere violencia política contra las mujeres en razón de género (VPMRG)?",
+   o:["Que sea un acto físico de violencia ocurrido necesariamente durante una campaña electoral activa.",
+      "Que sea cometido únicamente por hombres contra mujeres que sean candidatas a algún cargo de elección popular.",
+      "Que la acción u omisión esté basada en el género de la víctima y tenga por objeto o resultado menoscabar, anular o impedir el ejercicio de sus derechos político-electorales."],
+   c:2,ex:"La VPMRG requiere: 1) que el acto (acción u omisión) esté motivado o basado en el género, y 2) que tenga por objeto o resultado afectar el ejercicio de derechos político-electorales de mujeres. Puede ser cometida por cualquier persona (hombre o mujer) y no se limita al periodo de campaña."},
 
-  { sa:"3.2", sal:"Sustitución de funcionarios de casilla", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 302–320",
-    p:"A las 16:00 horas, la Presidenta de una casilla sufre un desmayo por el calor y no puede continuar. La casilla tiene al Secretario, dos Escrutadores y un Suplente General disponibles.",
-    pt:"Sustitución del Presidente en jornada avanzada",
-    q:"¿Cuál es la secuencia correcta de designación de sustituto para la Presidenta en este caso?",
-    o:["El Suplente General asume inmediatamente la presidencia por ser el cargo con ese nombre.",
-       "El Secretario asume la presidencia como primer suplente por mandato de la cadena de suplencia (Presidente → Secretario → Primer Escrutador → Segundo Escrutador); el Suplente General cubre el cargo que el Secretario deja vacante al ascender. Si el Secretario también estuviera impedido, asumiría el Primer Escrutador, y así sucesivamente.",
-       "El CAE desig.na directamente a cualquier ciudadano presente sin seguir ningún orden de prelación."],
-    c:1,
-    ex:"La cadena de suplencia interna tiene un orden legal preciso: el Secretario asume la presidencia, quedando su cargo vacante; el Suplente General cubre el cargo vacante. Este mecanismo garantiza que los funcionarios que asumen el cargo superior ya conocen los procedimientos porque fueron capacitados para toda la MDC. El Suplente General es el complemento del mecanismo, no el primer escalón." },
+  {sa:"3.3",sal:"Violencia política contra las mujeres en razón de género",area:"Justicia electoral",cx:false,
+   p:"Una presidenta municipal recibe mensajes anónimos amenazantes que la presionan a renunciar a su cargo. Sus colaboradores varones no reciben este tipo de mensajes.",
+   pt:"Caso de VPMRG",mt:null,
+   q:"¿Este caso puede constituir violencia política contra las mujeres en razón de género? ¿Por qué?",
+   o:["Sí, porque la presión para renunciar mediante amenazas, dirigida específicamente a ella por su género, tiene por objeto impedir el ejercicio de su cargo como autoridad electa.",
+      "No, porque la VPMRG solo aplica durante la campaña electoral, no cuando la persona ya ejerce el cargo.",
+      "No, porque al ser mensajes anónimos la ley exige identificar plenamente al agresor antes de calificar la conducta como VPMRG."],
+   c:0,ex:"La VPMRG no se limita al periodo electoral; también protege a las mujeres que ya ejercen cargos políticos. El hecho de que solo ella reciba las amenazas (no sus colaboradores varones) es un indicador del componente de género. La presión para renunciar tiene por objeto impedir el ejercicio de su mandato."},
 
-  { sa:"3.2", sal:"Sustitución de funcionarios de casilla", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 302–320; INE (2023) Lineamientos para cómputos distritales",
-    p:"Los Lineamientos de Cómputos 2023 identifican las sustituciones no documentadas como un factor de riesgo para la validez de las casillas durante el Cómputo Distrital.",
-    pt:"Documentación de sustituciones y cómputos distritales",
-    q:"¿Cuál es el impacto directo de una sustitución bien documentada en el Acta de la Jornada sobre el desarrollo del Cómputo Distrital?",
-    o:["No tiene ningún impacto; el Cómputo Distrital no revisa las sustituciones ocurridas durante la jornada.",
-       "Una sustitución bien documentada (nombre del sustituto, cargo cubierto, hora, motivo y firma del nuevo funcionario) permite al Consejo Distrital verificar que todos los actos realizados después del cambio fueron ejecutados por alguien válidamente designado. Esto elimina un argumento de impugnación de los partidos y previene la apertura innecesaria del paquete electoral para recuento.",
-       "Una sustitución bien documentada obliga automáticamente al Consejo Distrital a realizar un recuento total de esa casilla."],
-    c:1,
-    ex:"Los Lineamientos de Cómputos 2023 reconocen la documentación precisa como un factor de blindaje de la casilla: cuando el expediente es completo y coherente, el Consejo Distrital puede verificar la cadena de actuaciones sin abrir el paquete. La sustitución bien documentada no activa el recuento; es la mal documentada (o inexistente) la que lo puede detonar al generar incertidumbre sobre quién firmó las actas." },
+  {sa:"3.3",sal:"Violencia política contra las mujeres en razón de género",area:"Justicia electoral",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué protocolo deben tener los partidos políticos para atender la VPMRG y quién supervisa su cumplimiento?",
+   o:["Los partidos no están obligados a tener protocolos específicos; basta con respetar la paridad de género en sus candidaturas.",
+      "Los partidos deben contar con un protocolo para prevenir, atender y sancionar la VPMRG; el INE supervisa su existencia y cumplimiento, pudiendo imponer sanciones ante su ausencia o incumplimiento.",
+      "El protocolo es voluntario y solo aplica a partidos que cuenten con más de diez legisladoras electas en el Congreso."],
+   c:1,ex:"La LGPP y la LGIPE obligan a todos los partidos a incluir en sus estatutos normas y protocolos para prevenir y sancionar la VPMRG. El INE verifica su existencia y aplicación; la ausencia o el incumplimiento pueden derivar en amonestaciones o multas al partido."},
 
-  /* ══════════════════════════════════════════════════
-     3.3  INCIDENTES Y CONTINGENCIAS  (4)
-  ══════════════════════════════════════════════════ */
-  { sa:"3.3", sal:"Incidentes y contingencias en la jornada", area:"Jornada electoral — funciones del vocal",
-    src:"LGMDE (2021); LGIPE (2024), Arts. 302–330",
-    p:"A las 14:00 horas, un grupo de personas que se identifican como miembros de una organización irrumpe en la casilla y amenaza a los funcionarios para que anulen votos de cierto partido.",
-    pt:"Coacción a funcionarios de casilla — conducta tipificada en LGMDE",
-    q:"¿Qué conductas de las descritas en el escenario están tipificadas como delitos electorales en la LGMDE y qué obligaciones genera eso para los funcionarios de casilla?",
-    o:["Ninguna conducta descrita es delito electoral; solo serían faltas administrativas.",
-       "La irrupción con amenazas para influir en el resultado de la votación constituye delito electoral conforme a la LGMDE (coacción a funcionarios electorales y obstrucción del proceso). Los funcionarios tienen la obligación de documentar el incidente con precisión, solicitar auxilio de la fuerza pública, reportar al CAE/Supervisor para escalar a la Junta Distrital y eventualmente a la FGR, y continuar la votación una vez restablecido el orden.",
-       "Los funcionarios de casilla deben resolver ellos mismos la situación sin reportar a nadie para no alarmar a la ciudadanía."],
-    c:1,
-    ex:"La LGMDE tipifica la coacción a funcionarios electorales como delito grave. Esto genera obligaciones concretas para los funcionarios: documentar con detalle (hora, descripción de personas, contenido de las amenazas), no ceder a la coacción, solicitar auxilio policial y reportar a la cadena de mando del INE. La Junta Distrital a su vez reporta a la FGR. La documentación precisa es la base para el ejercicio de la acción penal." },
+  // === 3.3 — RELACIONA: vía de denuncia / consecuencia ===
+  {sa:"3.3",sal:"Violencia política contra las mujeres en razón de género",area:"Justicia electoral",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Vía de denuncia por VPMRG</th><th colspan="2">Consecuencia y autoridad resolutora</th></tr></thead><tbody>
+<tr><td>1.</td><td>Queja electoral ante el INE</td><td>a)</td><td>Pena privativa de libertad si la conducta está tipificada como delito electoral; resuelve la FISEL-FGR</td></tr>
+<tr><td>2.</td><td>Denuncia penal ante la FISEL</td><td>b)</td><td>Sanción administrativa: multa e inhabilitación al responsable; resuelve el INE o el TEPJF</td></tr>
+<tr><td>3.</td><td>Ambas vías simultáneamente</td><td>c)</td><td>Es posible y legal; cada vía corre de forma independiente y sus consecuencias pueden acumularse</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada vía de denuncia por VPMRG con su consecuencia y autoridad competente:",
+   o:["1b, 2a, 3c","1a, 2b, 3c","1c, 2a, 3b"],
+   c:0,ex:"Queja ante el INE (1b): genera sanciones administrativas (multa, inhabilitación). Denuncia penal ante la FISEL (2a): puede resultar en pena privativa de libertad si hay delito electoral. Ambas vías (3c) pueden usarse simultáneamente ya que son independientes entre sí."},
 
-  { sa:"3.3", sal:"Incidentes y contingencias en la jornada", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 302–330; INE (2023) Lineamientos para cómputos distritales",
-    p:"En una casilla, al momento del escrutinio y cómputo, los funcionarios detectan que el total de boletas depositadas en la urna supera en 15 el número de electores que votaron según la lista nominal.",
-    pt:"Inconsistencia crítica en el escrutinio — sobrante de boletas",
-    q:"¿Cuál es el procedimiento que deben seguir los funcionarios de casilla ante esta inconsistencia y qué consecuencia puede tener en el Cómputo Distrital?",
-    o:["Los funcionarios deben quemar las 15 boletas sobrantes para cuadrar los totales antes de levantar el acta.",
-       "Los funcionarios deben asentar la inconsistencia con precisión en el Acta de Escrutinio y Cómputo (número de boletas en urna, número de electores que votaron y la diferencia); no deben manipular las boletas. En el Cómputo Distrital, esta inconsistencia puede activar el recuento parcial de esa casilla o, si la diferencia es determinante para el resultado del distrito, puede ser causa de impugnación ante el TEPJF.",
-       "Los 15 votos sobrantes deben asignarse al candidato menos votado para compensar el desequilibrio."],
-    c:1,
-    ex:"La inconsistencia de boletas es un indicador de posible irregularidad (boletas introducidas fraudulentamente o error en el conteo). El procedimiento correcto es documentarla fielmente, sin manipulación. Los Lineamientos de Cómputos 2023 establecen que esta inconsistencia es una de las causales que puede activar el recuento parcial. La manipulación de boletas constituiría delito electoral tipificado en la LGMDE." },
+  // === 4.1 ACREDITACIÓN DE OBSERVADORES (2) ===
+  {sa:"4.1",sal:"Acreditación de personas observadoras electorales",area:"Organización de la elección",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué actividades puede y qué actividades NO puede realizar un observador electoral acreditado durante la jornada?",
+   o:["Puede observar libremente sin ninguna restricción, incluyendo asesorar directamente a los funcionarios de casilla si lo solicitan.",
+      "Puede presenciar la jornada, el escrutinio y cómputo, y levantar sus propios registros; NO puede interferir, dar instrucciones a funcionarios ni tomar partido por algún candidato o partido.",
+      "Solo puede observar la instalación de la casilla; la normativa le exige retirarse antes del inicio formal de la votación."],
+   c:1,ex:"Los observadores electorales tienen derecho a presenciar todas las etapas de la jornada (instalación, votación, escrutinio, cómputo y entrega de paquetes) y elaborar informes. Tienen prohibido: interferir en el proceso, dar indicaciones a funcionarios, pronunciarse en favor de candidatos o partidos, o realizar actividades de proselitismo."},
 
-  { sa:"3.3", sal:"Incidentes y contingencias en la jornada", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 302–330; INE (2022) Protocolo atención VPcM",
-    p:"Durante la jornada, una representante de partido ante la casilla reporta al CAE que el Presidente de la MDC le está impidiendo ejercer sus funciones de representación y la ha amenazado si vuelve a intervenir.",
-    pt:"VPcM en la jornada electoral — actuación del CAE",
-    q:"¿Cuál es la actuación que debe seguir el CAE ante el reporte de posible VPcM durante la jornada?",
-    o:["El CAE debe resolver el conflicto internamente entre el Presidente y la representante sin documentar nada.",
-       "El CAE debe documentar el reporte con precisión (hora, descripción de los hechos, identidad de las personas involucradas); notificar de inmediato al Supervisor y a la Junta Distrital; orientar a la representante sobre los mecanismos de denuncia disponibles; si la conducta del Presidente de Casilla constituye VPcM, activar el Protocolo INE 2022 para el análisis de riesgo; y si la conducta impide el ejercicio de las funciones de la representante, evaluar la situación con el Supervisor para determinar si procede alguna medida adicional.",
-       "El CAE solo puede intervenir si la representante presenta una queja formal por escrito ante el Consejo Distrital."],
-    c:1,
-    ex:"El Protocolo INE 2022 establece que la actuación ante VPcM no espera queja formal: quien la detecta o recibe el reporte debe documentar y activar la ruta. El CAE es el primer eslabón: documenta, notifica, orienta y activa el protocolo. No resuelve el conflicto solo ni espera; escala de inmediato a la cadena de mando. La jornada no se suspende por esto, pero la conducta del Presidente puede generar responsabilidad disciplinaria y penal." },
+  {sa:"4.1",sal:"Acreditación de personas observadoras electorales",area:"Organización de la elección",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Cuál es el plazo límite para que las organizaciones presenten su solicitud de acreditación de observadores ante el INE?",
+   o:["Al menos 20 días antes de la jornada electoral, ante el Consejo Distrital o Local correspondiente.",
+      "En cualquier momento durante el proceso electoral activo, sin plazo específico ni restricción de fecha.",
+      "El mismo día de la jornada electoral, siempre que presenten la documentación completa antes de las 8:00 horas."],
+   c:0,ex:"Las organizaciones deben solicitar la acreditación de sus observadores con al menos 20 días de anticipación a la jornada electoral, presentando la solicitud ante el Consejo Distrital o Local del INE correspondiente al ámbito donde realizarán la observación, con la documentación que establece la normativa."},
 
-  { sa:"3.3", sal:"Incidentes y contingencias en la jornada", area:"Jornada electoral — funciones del vocal",
-    src:"LGIPE (2024), Arts. 302–330; INE (2023) Lineamientos para cómputos distritales",
-    p:"Una casilla cierra la votación a las 18:15 horas porque había electores en fila. Al comenzar el escrutinio, los representantes de dos partidos distintos presentan versiones contradictorias sobre el número de electores en fila al momento del cierre.",
-    pt:"Cierre de votación con electores en fila y controversia",
-    q:"¿Cómo debe el Presidente de Casilla manejar la discrepancia entre representantes sobre el cierre de la votación?",
-    o:["El Presidente debe elegir la versión de los representantes del partido con mayor número de votos hasta ese momento.",
-       "El Presidente de Casilla debe asentar en el Acta de la Jornada: la hora exacta de cierre de la votación, el nombre de los últimos electores que ejercieron su voto, y las posiciones distintas de los representantes de partido con sus respectivas firmas (de conformidad o inconformidad). La discrepancia entre representantes es un incidente que queda documentado en el expediente para eventual revisión en el Cómputo Distrital, donde el Consejo analizará el acta.",
-       "El Presidente debe anular los últimos votos emitidos después de las 18:00 para evitar la controversia."],
-    c:1,
-    ex:"La actuación del Presidente ante controversias entre representantes sigue el principio de documentación fiel: no resuelve la controversia jurídicamente sino la registra con precisión. Los Lineamientos de Cómputos 2023 establecen que el Consejo Distrital analiza el acta; si la controversia sobre el cierre es relevante para el resultado, el TEPJF puede revisar el expediente completo. Lo que no se documenta no existe jurídicamente." },
+  // === 4.2 CASILLAS ELECTORALES (2) — RELACIONA ===
+  {sa:"4.2",sal:"Casillas electorales",area:"Organización de la elección",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Tipo de casilla</th><th colspan="2">Definición y característica</th></tr></thead><tbody>
+<tr><td>1.</td><td>Casilla ordinaria</td><td>a)</td><td>Misma ubicación que la ordinaria; se instala cuando el listado nominal supera los 1,500 electores de la sección</td></tr>
+<tr><td>2.</td><td>Casilla contigua</td><td>b)</td><td>Se ubica en hospitales, reclusorios o terminales para ciudadanos fuera de su sección o con impedimentos físicos</td></tr>
+<tr><td>3.</td><td>Casilla extraordinaria</td><td>c)</td><td>Atiende hasta 1,500 electores inscritos en una sección electoral</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada tipo de casilla electoral con su definición correcta:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1b, 2a, 3c"],
+   c:0,ex:"Casilla ordinaria (1c): hasta 1,500 electores de una sección. Casilla contigua (2a): misma ubicación, cuando la sección supera 1,500 electores se divide el listado. Casilla extraordinaria (3b): se ubica en lugares de concentración (hospitales, cárceles) para ciudadanos fuera de su sección."},
 
-  /* ══════════════════════════════════════════════════
-     4.1  PROGRAMAS DE EDUCACIÓN CÍVICA Y VPcM  (3)
-  ══════════════════════════════════════════════════ */
-  { sa:"4.1", sal:"Programas de educación cívica y VPcM", area:"Educación cívica y participación ciudadana",
-    src:"INE (2020) Reglamento de Quejas — VPcM; INE (2022) Protocolo VPcM",
-    p:"El Reglamento de Quejas y Denuncias (INE, 2020) y el Protocolo de atención (INE, 2022) establecen que la prevención de la VPcM es una función de todos los órganos del INE, incluyendo la VCEyEC.",
-    pt:"VCEyEC como actor de prevención de la VPcM",
-    q:"¿A través de qué acciones concretas puede la VCEyEC contribuir a la prevención de la VPcM en su distrito, conforme al Reglamento 2020 y al Protocolo 2022?",
-    o:["La VCEyEC no tiene ningún papel en la prevención de la VPcM; esa es responsabilidad exclusiva del área jurídica del INE.",
-       "La VCEyEC puede contribuir mediante: incorporación de contenidos sobre VPcM en la capacitación a funcionarios de casilla; distribución de materiales informativos sobre derechos políticos de las mujeres en sus actividades de educación cívica; orientación a ciudadanas que reporten posibles actos de VPcM en el contexto de las actividades electorales; y coordinación con organizaciones de la sociedad civil y autoridades locales para ampliar el alcance de las acciones preventivas.",
-       "La VCEyEC solo debe actuar en materia de VPcM cuando el Consejo General del INE lo ordene expresamente para un proceso específico."],
-    c:1,
-    ex:"El enfoque preventivo del Reglamento 2020 y el Protocolo 2022 reconoce que la VCEyEC es un actor estratégico: su cercanía con la ciudadanía, su presencia en comunidades y su rol en la capacitación la convierten en un canal privilegiado para la prevención. Incorporar VPcM en la capacitación, distribuir materiales en educación cívica y orientar a quienes reportan son acciones alineadas con su mandato sin requerir instrucción específica del Consejo General." },
+  {sa:"4.2",sal:"Casillas electorales",area:"Organización de la elección",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿En qué casos puede el Consejo Distrital cambiar la ubicación de una casilla ya aprobada?",
+   o:["Nunca; una vez aprobada formalmente, la ubicación es definitiva e inamovible hasta la conclusión de la jornada.",
+      "Cuando el lugar originalmente aprobado ya no está disponible, sea destruido, presente condiciones de inseguridad o sea físicamente inaccesible antes de la jornada, el Consejo Distrital puede aprobar una ubicación sustituta.",
+      "Solo cuando todos los partidos representados en el Consejo Distrital lo soliciten de manera unánime y por escrito."],
+   c:1,ex:"El Consejo Distrital puede cambiar la ubicación de una casilla cuando surja una causa sobrevenida que la haga inviable: pérdida de disponibilidad del local, daño físico, condiciones de inseguridad o inaccesibilidad. El cambio debe aprobarse en sesión del Consejo y notificarse a los partidos."},
 
-  { sa:"4.1", sal:"Programas de educación cívica y VPcM", area:"Educación cívica y participación ciudadana",
-    src:"INE/CG602/2023 — Voto en prisión preventiva; LGIPE (2024)",
-    p:"El Acuerdo INE/CG602/2023 establece que el INE debe desarrollar acciones de educación cívica dirigidas a las personas en prisión preventiva para informarles sobre su derecho al voto.",
-    pt:"Educación cívica en centros penitenciarios",
-    q:"¿Cuál es la responsabilidad específica de la VCEyEC en la difusión del derecho al voto de personas en prisión preventiva, conforme al Acuerdo INE/CG602/2023?",
-    o:["La VCEyEC no tiene ninguna responsabilidad en este ámbito; el INE solo organiza el voto pero no hace educación cívica en penales.",
-       "La VCEyEC debe coordinar con las autoridades penitenciarias la difusión del derecho al voto entre la población en prisión preventiva; producir o adaptar materiales informativos accesibles para ese público; realizar sesiones informativas dentro del centro; y garantizar que las personas en prisión preventiva conozcan los requisitos (credencial vigente, listado nominal especial) y el procedimiento para ejercer su voto el día de la jornada.",
-       "La educación cívica en penales es responsabilidad exclusiva del INEA y no del INE."],
-    c:1,
-    ex:"El Acuerdo INE/CG602/2023 reconoce que el derecho al voto sin educación cívica previa es un derecho nominal, no efectivo. La VCEyEC tiene la responsabilidad de hacer que ese derecho sea ejercible: informar, orientar, adaptar materiales y coordinar el acceso al penal. Esta es una extensión natural de su mandato de educación cívica, aplicada a una población que ha estado sistemáticamente excluida del proceso electoral." },
+  // === 4.3 RECEPCIÓN, ALMACENAMIENTO Y DISTRIBUCIÓN (3) ===
+  {sa:"4.3",sal:"Recepción, almacenamiento, integración y distribución de documentación y materiales electorales",area:"Organización de la elección",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué documentos y materiales integran el paquete electoral que se entrega a cada Mesa Directiva de Casilla?",
+   o:["Las boletas electorales para cada elección, el listado nominal, las actas de jornada, las urnas, la mampara, el líquido indeleble, los sellos, los útiles de escritorio y demás materiales que establezca el INE.",
+      "Solo las boletas electorales y el listado nominal de la sección; los demás materiales los aportan los partidos políticos acreditados.",
+      "Únicamente las urnas y las actas de escrutinio; los funcionarios llevan sus propios útiles de escritorio."],
+   c:0,ex:"El paquete electoral es integral: incluye todos los documentos (boletas, listado nominal, actas de instalación, escrutinio y cómputo, acta de incidentes) y materiales (urnas, mampara, líquido indeleble, sellos, bolígrafo) necesarios para la jornada. El Presidente de casilla lo recibe y es responsable de su integridad."},
 
-  { sa:"4.1", sal:"Programas de educación cívica y VPcM", area:"Educación cívica y participación ciudadana",
-    src:"INE (2020) Reglamento de Quejas — VPcM; LGMDE (2021)",
-    p:"La VPcM puede manifestarse en el ámbito comunitario durante el proceso electoral: presión sobre mujeres para que voten por cierto candidato, amenazas si participan como funcionarias de casilla, o desprestigio público de candidatas.",
-    pt:"VPcM en el ámbito comunitario — rol de la educación cívica",
-    q:"¿Cómo puede la VCEyEC, a través de sus programas de educación cívica, contribuir a reducir la normalización de la VPcM en el ámbito comunitario?",
-    o:["Los programas de educación cívica no pueden abordar la VPcM porque es un tema político sensible.",
-       "La VCEyEC puede incluir en sus programas de educación cívica contenidos que definan la VPcM, la distingan de otras formas de violencia política, identifiquen sus manifestaciones cotidianas (presión para votar por coacción, impedir candidaturas de mujeres, desprestigio por razón de género) y difundan los canales de denuncia disponibles. Al visibilizarla y nombrarla, la educación cívica contribuye a romper su normalización.",
-       "La VCEyEC debe únicamente difundir los canales de denuncia, sin hacer ninguna referencia al contenido de la VPcM."],
-    c:1,
-    ex:"La normalización de la VPcM es el obstáculo principal para su denuncia: lo que no se nombra no se identifica. La educación cívica de la VCEyEC puede ser el mecanismo para visibilizar estas conductas en la comunidad, nombrando sus manifestaciones concretas y los derechos que vulneran. Esto transforma la educación cívica de un ejercicio abstracto en una herramienta de protección de los derechos político-electorales de las mujeres." },
+  // === 4.3 — RELACIONA: etapa cadena de custodia / responsable ===
+  {sa:"4.3",sal:"Recepción, almacenamiento, integración y distribución de documentación y materiales electorales",area:"Organización de la elección",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Etapa de la cadena de custodia</th><th colspan="2">Responsable y acción clave</th></tr></thead><tbody>
+<tr><td>1.</td><td>Sellado del paquete en casilla</td><td>a)</td><td>CRT o Consejo Distrital recibe y registra el paquete; quedan como testigos representantes de partidos</td></tr>
+<tr><td>2.</td><td>Traslado y entrega</td><td>b)</td><td>Presidente de la MDC lleva el paquete al CRT o al Consejo Distrital y firma el acta de entrega-recepción</td></tr>
+<tr><td>3.</td><td>Recepción oficial</td><td>c)</td><td>Funcionarios de casilla sellan el paquete una vez concluido el escrutinio y cómputo de casilla</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada etapa de la cadena de custodia del paquete electoral con el responsable y la acción clave:",
+   o:["1c, 2b, 3a","1a, 2c, 3b","1b, 2a, 3c"],
+   c:0,ex:"Sellado (1c): los funcionarios de casilla sellan el paquete tras el escrutinio. Traslado (2b): el Presidente de la MDC lo lleva al CRT o Consejo Distrital y firma el acta. Recepción oficial (3a): el CRT o Consejo Distrital recibe y registra con testigos de partidos."},
 
-  /* ══════════════════════════════════════════════════
-     4.2  CULTURA DEMOCRÁTICA  (3)
-  ══════════════════════════════════════════════════ */
-  { sa:"4.2", sal:"Cultura democrática", area:"Educación cívica y participación ciudadana",
-    src:"LGIPE (2024), Art. 41 CPEUM; INE/CG602/2023",
-    p:"El voto de las personas en prisión preventiva reconocido en el Acuerdo INE/CG602/2023 es resultado de una sentencia del TEPJF que estableció que la prisión preventiva no priva de los derechos políticos.",
-    pt:"Alcance del derecho al sufragio como valor democrático",
-    q:"¿Qué principio democrático fundamental fundamenta la obligación del INE de garantizar el voto de personas en prisión preventiva, más allá del cumplimiento de la sentencia?",
-    o:["El principio de seguridad pública: garantizar el orden en los centros penitenciarios requiere que los internos tengan derechos.",
-       "El principio de universalidad del sufragio: el derecho al voto es universal y no admite más restricciones que las expresamente previstas en la Constitución; la prisión preventiva es una medida cautelar que no extingue los derechos políticos del ciudadano, quien no ha sido condenado. Restringir su voto sin base constitucional viola el principio democrático de que todos los ciudadanos participan en la formación del gobierno.",
-       "El principio de mayoría: si la mayoría de los ciudadanos cree que los presos deben votar, el INE debe garantizarlo."],
-    c:1,
-    ex:"La universalidad del sufragio es el fundamento: la Constitución solo suspende los derechos políticos ante sentencia ejecutoria o proceso criminal (Art. 38); la prisión preventiva no es ninguno de esos supuestos. La sentencia Sup-JDC-352/2018 reafirma este principio. El INE garantiza el voto no por la sentencia sino porque es su mandato constitucional extender el sufragio universal a todos los ciudadanos no privados de él por disposición expresa." },
+  {sa:"4.3",sal:"Recepción, almacenamiento, integración y distribución de documentación y materiales electorales",area:"Organización de la elección",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Con qué anticipación deben estar integrados y disponibles los paquetes electorales en la Junta Distrital?",
+   o:["Exactamente 24 horas antes de la jornada, para entregarse en la madrugada del día de la elección.",
+      "Con la anticipación suficiente para que los funcionarios de casilla puedan recogerlos, trasladarlos y tenerlos listos antes de las 8:00 horas; generalmente el día previo o primeras horas del día de la jornada.",
+      "Exactamente tres días antes, para que los partidos puedan verificar y certificar su contenido."],
+   c:1,ex:"Los paquetes electorales deben estar disponibles con la anticipación suficiente para que los Presidentes de casilla puedan recogerlos, trasladarlos a la ubicación de la casilla e instalarla antes de las 8:00 horas. Habitualmente se entregan la tarde-noche anterior o muy temprano el día de la jornada, según la logística distrital."},
 
-  { sa:"4.2", sal:"Cultura democrática", area:"Educación cívica y participación ciudadana",
-    src:"INE (2022) Protocolo VPcM; LGMDE (2021)",
-    p:"La paridad de género en los cargos electorales y la prevención de la VPcM son dos instrumentos complementarios para garantizar la participación política plena de las mujeres.",
-    pt:"Paridad y VPcM como instrumentos complementarios",
-    q:"¿Por qué la paridad de género en la integración de las MDC y la prevención de la VPcM son complementarias y no sustituibles la una por la otra?",
-    o:["Son sustitutivas: si se garantiza la paridad ya no es necesario prevenir la VPcM.",
-       "La paridad garantiza que las mujeres estén presentes en los cargos electorales (incluidas las MDC); la prevención de la VPcM garantiza que puedan ejercer esos cargos sin violencia, presión ni discriminación. Una sin la otra es insuficiente: poner a mujeres en los cargos sin protegerlas de la violencia no garantiza participación efectiva; y prevenir la violencia sin paridad no garantiza representación equitativa.",
-       "La paridad es una medida temporal que desaparecerá cuando las mujeres sean mayoría en los cargos electorales; la VPcM es el obstáculo permanente."],
-    c:1,
-    ex:"La complementariedad es conceptual: la paridad opera sobre el acceso (estar en el cargo); la prevención de VPcM opera sobre el ejercicio efectivo (poder actuar en ese cargo sin violencia). Garantizar el acceso sin el ejercicio efectivo produce una paridad nominal. La VCEyEC debe trabajar ambas dimensiones: integrar MDC paritarias y garantizar que las funcionarias puedan ejercer su rol sin violencia ni presión." },
+  // === 5.1 REMISIÓN DE DOCUMENTACIÓN (1) ===
+  {sa:"5.1",sal:"Remisión de la documentación y expedientes electorales a los consejos distritales",area:"Resultados y declaración de validez",cx:false,
+   p:null,pt:null,mt:null,
+   q:"¿Qué tratamiento especial reciben los votos impugnados dentro del expediente de casilla al llegar al Consejo Distrital?",
+   o:["Se destruyen automáticamente al recibirse en el Consejo Distrital, para evitar que puedan alterar el resultado final.",
+      "Se incorporan de inmediato al conteo general del cómputo distrital sin ningún análisis previo adicional.",
+      "Se mantienen separados; el Consejo Distrital los examina durante el cómputo para determinar si son válidos o nulos, y su resolución puede modificar el resultado de la casilla."],
+   c:2,ex:"Los votos impugnados en casilla llegan al Consejo Distrital dentro del expediente y se examinan durante el cómputo distrital. El Consejo decide si son válidos o nulos; si son válidos, se suman al partido correspondiente; si son nulos, se contabilizan como votos nulos. Su resolución puede cambiar el resultado de esa casilla."},
 
-  { sa:"4.2", sal:"Cultura democrática", area:"Educación cívica y participación ciudadana",
-    src:"LGIPE (2024); INE/CG602/2023; LGMDE (2021)",
-    p:"La ciudadanía de grupos en situación de vulnerabilidad —personas privadas de libertad en prisión preventiva, personas indígenas, personas con discapacidad— enfrenta barreras estructurales para el ejercicio del voto.",
-    pt:"Ciudadanía inclusiva y función de la VCEyEC",
-    q:"¿Cuál es el valor democrático que justifica el esfuerzo institucional adicional para garantizar el voto de estos grupos, más allá del cumplimiento legal?",
-    o:["El valor de la eficiencia: garantizar el voto de más personas incrementa la participación y mejora las estadísticas del INE.",
-       "El valor de la igualdad sustantiva: la democracia no es solo igualdad formal (todos tienen el derecho) sino igualdad material (todos pueden ejercerlo efectivamente). Los grupos en situación de vulnerabilidad enfrentan barreras reales que convierten su derecho formal en una promesa vacía. El esfuerzo adicional del INE para remover esas barreras es la expresión de que la democracia se compromete con la igualdad real, no solo la declarada.",
-       "El valor de la mayoría: si estos grupos son minoría, su voto no tiene efecto determinante y no justifica el esfuerzo."],
-    c:1,
-    ex:"La igualdad sustantiva distingue entre tener un derecho y poder ejercerlo. La democracia formal dice que todos tienen derecho al voto; la democracia sustantiva garantiza que todos puedan ejercerlo sin importar sus condiciones. El trabajo de la VCEyEC con grupos vulnerables —adaptando materiales, coordinando accesos, eliminando barreras— es la expresión práctica de ese compromiso con la igualdad real, que es el fundamento ético de la democracia." },
+  // === 5.2 CÓMPUTOS DISTRITALES (2) — RELACIONA ===
+  {sa:"5.2",sal:"Cómputos distritales",area:"Resultados y declaración de validez",cx:true,
+   p:null,pt:null,
+   mt:`<div class="match-table-wrap"><table class="match-table"><thead><tr><th colspan="2">Instrumento o acto</th><th colspan="2">Naturaleza jurídica y características</th></tr></thead><tbody>
+<tr><td>1.</td><td>PREP</td><td>a)</td><td>Acto formal del Consejo Distrital; suma votos, resuelve impugnaciones, puede hacer recuentos y emite constancias con plena validez jurídica</td></tr>
+<tr><td>2.</td><td>Cómputo distrital</td><td>b)</td><td>Máxima autoridad jurisdiccional electoral; valida o anula la elección federal al resolver los medios de impugnación</td></tr>
+<tr><td>3.</td><td>TEPJF</td><td>c)</td><td>Sistema de difusión ciudadana; resultados preliminares basados en copias de actas, sin valor jurídico definitivo</td></tr>
+</tbody></table></div>`,
+   q:"Relacione cada instrumento o acto electoral con su naturaleza jurídica y características:",
+   o:["1c, 2a, 3b","1a, 2c, 3b","1b, 2a, 3c"],
+   c:0,ex:"PREP (1c): datos preliminares sin valor jurídico definitivo. Cómputo distrital (2a): acto formal con plena validez jurídica que puede implicar recuentos y emite constancias. TEPJF (3b): máxima autoridad jurisdiccional que valida o anula la elección al resolver impugnaciones."},
 
-  /* ══════════════════════════════════════════════════
-     5.1  LGIPE / CÓMPUTOS / SESIONES  (2)
-  ══════════════════════════════════════════════════ */
-  { sa:"5.1", sal:"LGIPE, cómputos distritales y sesiones de Junta", area:"Normativa aplicable al cargo",
-    src:"INE (2023) Lineamientos para cómputos distritales PEF 2023-2024; LGIPE (2024)",
-    p:"Los Lineamientos para la preparación y desarrollo de los cómputos distritales (INE, 2023) establecen las obligaciones de los vocales de las Juntas Distritales durante los Cómputos Distritales.",
-    pt:"Obligaciones del Vocal de Capacitación durante los Cómputos Distritales",
-    q:"¿Qué obligaciones específicas imponen los Lineamientos 2023 al Vocal de Capacitación durante los Cómputos Distritales?",
-    o:["El Vocal de Capacitación no tiene ninguna obligación durante los Cómputos; es responsabilidad exclusiva del Vocal de Organización.",
-       "Conforme a los Lineamientos 2023, el Vocal de Capacitación apoya técnicamente al Consejo Distrital durante los Cómputos: provee información sobre las casillas con incidencias de integración o sustitución que hayan ocurrido durante la jornada; aclara dudas sobre el proceso de capacitación de los funcionarios de casillas que sean objeto de impugnación; y colabora en la preparación del expediente de respuesta ante posibles recursos de inconformidad.",
-       "El Vocal de Capacitación solo firma el acta del Cómputo como testigo y no tiene ninguna función técnica."],
-    c:1,
-    ex:"Los Lineamientos de Cómputos 2023 reconocen que la VCEyEC es depositaria de la información sobre el proceso de capacitación y la integración de las MDC. Durante el Cómputo, esa información es necesaria para explicar incidencias: una sustitución, una baja, una asignación fuera de la lista nominal. El Vocal de Capacitación no preside el Cómputo pero es un recurso técnico esencial para el Consejo Distrital." },
-
-  { sa:"5.1", sal:"LGIPE, cómputos distritales y sesiones de Junta", area:"Normativa aplicable al cargo",
-    src:"IFE (2008). Reglamento de Sesiones para Juntas Locales y Distritales Ejecutivas; LGIPE (2024)",
-    p:"Durante el proceso electoral, la Junta Distrital Ejecutiva celebra sesiones más frecuentes para monitorear el avance de la capacitación y tomar decisiones operativas.",
-    pt:"Informes del Vocal de Capacitación en sesiones de Junta",
-    q:"¿Con qué contenido mínimo debe el Vocal de Capacitación presentar sus informes en las sesiones de Junta durante el proceso electoral, conforme al Reglamento de Sesiones IFE (2008)?",
-    o:["Solo necesita reportar el número total de ciudadanos capacitados al final del proceso.",
-       "El Reglamento de Sesiones establece que los informes de los vocales deben contener datos actualizados, verificables y comparativos: avance de localización y capacitación por subárea del distrito, bajas y sustituciones activas, indicadores de rezago por zona, incidencias relevantes y plan de acción para cubrir brechas. La Junta necesita esta información para tomar decisiones operativas oportunas.",
-       "El informe debe ser exclusivamente verbal y sin soporte documental para agilizar la sesión."],
-    c:1,
-    ex:"El Reglamento de Sesiones IFE (2008) establece que los informes deben ser suficientes para que la Junta pueda tomar decisiones informadas. Un informe con datos actualizados, comparativos y con plan de acción permite a la Junta identificar zonas de riesgo, reasignar recursos y escalar al nivel local si es necesario. Un informe genérico o solo con totales impide la toma de decisiones oportuna y deja al Vocal expuesto si el proceso falla." },
-
-  /* ══════════════════════════════════════════════════
-     5.2  LGSMIME / ESTATUTO SPEN  (2)
-  ══════════════════════════════════════════════════ */
-  { sa:"5.2", sal:"LGSMIME y Estatuto del SPEN", area:"Normativa aplicable al cargo",
-    src:"LGSMIME (2024), Arts. 3–12; LGIPE (2024)",
-    p:"La LGSMIME establece los medios de impugnación en materia electoral. Los actos de los órganos del INE durante el proceso electoral son susceptibles de impugnación a través de distintos medios.",
-    pt:"Impugnabilidad de los actos de la VCEyEC a través de la LGSMIME",
-    q:"¿A través de qué medio de impugnación previsto en la LGSMIME pueden los partidos políticos cuestionar la legalidad de la segunda insaculación realizada por el Consejo Distrital a propuesta de la VCEyEC?",
-    o:["Los actos de insaculación no son impugnables porque son actos técnicos del SPEN.",
-       "La segunda insaculación es un acto del Consejo Distrital que afecta el proceso electoral; los partidos políticos pueden impugnarla mediante el Recurso de Inconformidad (RIN) ante las Salas Regionales del TEPJF si consideran que se violaron los procedimientos legales (no se agotó el proceso de localización, se incluyeron ciudadanos inelegibles, no fue pública). La LGSMIME establece plazos precisos para su interposición.",
-       "Solo el ciudadano insaculado puede impugnar la segunda insaculación; los partidos no tienen legitimación activa en este acto."],
-    c:1,
-    ex:"El Recurso de Inconformidad (RIN) de la LGSMIME es el medio para impugnar actos del proceso preparatorio de la elección, incluyendo los del Consejo Distrital. Los partidos tienen legitimación activa para cuestionar la legalidad de la segunda insaculación si detectan vicios (ciudadanos inelegibles incluidos, procedimiento no público, listado con inconsistencias). La VCEyEC debe garantizar que el proceso sea irreprochable para evitar estos recursos." },
-
-  { sa:"5.2", sal:"LGSMIME y Estatuto del SPEN", area:"Normativa aplicable al cargo",
-    src:"INE (2023) Lineamientos para cómputos distritales; LGSMIME (2024)",
-    p:"Conforme a los Lineamientos de Cómputos 2023, si durante el Cómputo Distrital se detecta que una casilla presenta irregularidades graves relacionadas con la integración de la MDC, el Consejo Distrital puede declararla nula.",
-    pt:"Nulidad de casilla por vicios en la integración de la MDC",
-    q:"¿Qué tipo de vicio en la integración de la MDC puede generar la nulidad de una casilla durante el Cómputo Distrital y qué implicación tiene para el trabajo previo de la VCEyEC?",
-    o:["Ningún vicio en la MDC puede generar nulidad; solo importa el resultado numérico de los votos.",
-       "Si se prueba que la MDC estuvo integrada por personas que no cumplen los requisitos legales (inelegibles, no capacitados, sin listado nominal de la sección) o que la integración se produjo sin seguir el procedimiento establecido, el Consejo Distrital puede declarar nula la casilla conforme a las causales de la LGIPE. Esto vincula directamente el trabajo de la VCEyEC: una capacitación deficiente o una integración irregular puede traducirse en votos anulados.",
-       "La nulidad de casilla por vicios en la MDC solo puede declararla el TEPJF, no el Consejo Distrital."],
-    c:1,
-    ex:"La nulidad de casilla por vicios en la MDC es la consecuencia más grave del trabajo deficiente de la VCEyEC: los votos de los ciudadanos de esa sección no se computan. Las causales incluyen MDC integrada por inelegibles o no capacitados, lo que vincula directamente la calidad del proceso de insaculación y capacitación con la validez de los votos. Este es el argumento más poderoso para justificar la importancia del trabajo riguroso de la VCEyEC." }
+  {sa:"5.2",sal:"Cómputos distritales",area:"Resultados y declaración de validez",cx:false,
+   p:null,pt:null,mt:null,
+   q:"Una vez realizados los cómputos distritales y entregadas las constancias de mayoría, ¿qué órgano tiene la última palabra para validar o anular una elección federal?",
+   o:["El Consejo General del INE, mediante acuerdo de sus once consejeros en sesión extraordinaria.",
+      "El Tribunal Electoral del Poder Judicial de la Federación (TEPJF), que resuelve los medios de impugnación y emite las declaraciones de validez definitivas.",
+      "La Cámara de Diputados, a través de su Comisión de Puntos Constitucionales y el pleno de la Cámara."],
+   c:1,ex:"El TEPJF es la máxima autoridad jurisdiccional en materia electoral. Tras los cómputos distritales, si hay impugnaciones (JIN), el TEPJF las resuelve y emite las declaraciones de validez definitivas. El INE no tiene facultad para validar o anular una elección; esa es una función jurisdiccional exclusiva del TEPJF."}
 ];
 
-/* ═══════════════════════════════════════════════════════
-   ESTADO GLOBAL
-═══════════════════════════════════════════════════════ */
-const TIME_LIMIT = 50 * 60;
-let Q = [], answers = [], revealed = [], current = 0;
-let timerInterval = null, secondsLeft = TIME_LIMIT;
-
+// ── ALEATORIZACIÓN v3 ──
+// Baraja el arreglo completo preservando integridad de cada pregunta
 function shuffleArray(arr) {
   const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
 
+// Baraja las opciones de cada pregunta y actualiza el índice correcto
 function shuffleOptions(q) {
-  const indices = shuffleArray([0,1,2]);
-  return { ...q, o: indices.map(i => q.o[i]), c: indices.indexOf(q.c) };
+  const indices = [0, 1, 2];
+  const shuffled = shuffleArray(indices);
+  return {
+    ...q,
+    o: shuffled.map(i => q.o[i]),
+    c: shuffled.indexOf(q.c)
+  };
 }
 
-function buildShuffledQ() {
-  const SUBS = ["1.1","1.2","1.3","2.1","2.2","2.3","2.4","3.1","3.2","3.3","4.1","4.2","5.1","5.2"];
-  return SUBS.flatMap(sub =>
-    shuffleArray(BANK.filter(q => q.sa === sub)).map(q => shuffleOptions(q))
-  );
-}
+// Baraja por subárea para mantener la distribución oficial, luego aplica shuffle de opciones
+const SUBS_IN_ORDER = ["1.1","1.2","1.3","2.1","2.2","2.3","2.4","2.5","3.1","3.2","3.3","4.1","4.2","4.3","5.1","5.2"];
+const shuffledQ = SUBS_IN_ORDER.flatMap(sub =>
+  shuffleArray(Q.filter(q => q.sa === sub)).map(q => shuffleOptions(q))
+);
+Q.length = 0;
+shuffledQ.forEach(q => Q.push(q));
 
-const SS = {
-  "1.1":{bg:"#e8f5e9",color:"#1b5e20",icon:"📜"},
-  "1.2":{bg:"#f1f8e9",color:"#33691e",icon:"📋"},
-  "1.3":{bg:"#e8f5e9",color:"#2e7d32",icon:"🏗️"},
-  "2.1":{bg:"#e3f2fd",color:"#0d47a1",icon:"🎲"},
-  "2.2":{bg:"#e8eaf6",color:"#283593",icon:"🎓"},
-  "2.3":{bg:"#fff8e1",color:"#f57f17",icon:"📦"},
-  "2.4":{bg:"#fce4ec",color:"#880e4f",icon:"🔍"},
-  "3.1":{bg:"#f3e5f5",color:"#4a148c",icon:"🗳️"},
-  "3.2":{bg:"#fff3e0",color:"#e65100",icon:"🔄"},
-  "3.3":{bg:"#ffebee",color:"#b71c1c",icon:"⚠️"},
-  "4.1":{bg:"#e0f7fa",color:"#006064",icon:"📖"},
-  "4.2":{bg:"#e8f5e9",color:"#1b5e20",icon:"🏛️"},
-  "5.1":{bg:"#e3f2fd",color:"#1565c0",icon:"⚖️"},
-  "5.2":{bg:"#e8eaf6",color:"#1a237e",icon:"🎓"}
+const TIME_LIMIT=50*60;
+let answers,revealed,current,timerInterval,secondsLeft;
+const SS={
+  "1.1":{bg:"#e8f5e9",color:"#1b5e20",icon:"🏢"},
+  "1.2":{bg:"#f1f8e9",color:"#33691e",icon:"🏗️"},
+  "1.3":{bg:"#e8f5e9",color:"#2e7d32",icon:"🏛️"},
+  "2.1":{bg:"#e3f2fd",color:"#0d47a1",icon:"📋"},
+  "2.2":{bg:"#e8eaf6",color:"#283593",icon:"📮"},
+  "2.3":{bg:"#fce4ec",color:"#880e4f",icon:"⚖️"},
+  "2.4":{bg:"#fff3e0",color:"#e65100",icon:"⭐"},
+  "2.5":{bg:"#f3e5f5",color:"#4a148c",icon:"🗳️"},
+  "3.1":{bg:"#ffebee",color:"#b71c1c",icon:"🚫"},
+  "3.2":{bg:"#fff8e1",color:"#f57f17",icon:"📜"},
+  "3.3":{bg:"#fce4ec",color:"#c2185b",icon:"♀️"},
+  "4.1":{bg:"#e0f2f1",color:"#004d40",icon:"👁️"},
+  "4.2":{bg:"#e8f5e9",color:"#1b5e20",icon:"🗂️"},
+  "4.3":{bg:"#f3e5f5",color:"#6a1b9a",icon:"📦"},
+  "5.1":{bg:"#e8eaf6",color:"#1a237e",icon:"📁"},
+  "5.2":{bg:"#e1f5fe",color:"#01579b",icon:"📊"}
 };
 
-/* ═══════════════════════════════════════════════════════
-   INICIO
-═══════════════════════════════════════════════════════ */
-function startExam() {
-  if (timerInterval) clearInterval(timerInterval);
-  Q = buildShuffledQ();
-  answers     = new Array(Q.length).fill(null);
-  revealed    = new Array(Q.length).fill(false);
-  current     = 0;
-  secondsLeft = TIME_LIMIT;
+function startExam(){
+  answers=new Array(Q.length).fill(null);
+  revealed=new Array(Q.length).fill(false);
+  current=0;
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('examScreen').classList.remove('hidden');
   document.getElementById('navBar').classList.remove('hidden');
@@ -747,187 +621,196 @@ function startExam() {
   startTimer();
 }
 
-/* ═══════════════════════════════════════════════════════
-   RENDER
-═══════════════════════════════════════════════════════ */
-function renderQuestion(idx) {
-  current = idx;
-  const q = Q[idx];
-  const sc = SS[q.sa] || {bg:"#e8f5e9",color:"#1b5e20",icon:"📌"};
-  const isR = revealed[idx];
-  const sel = answers[idx];
-
-  let ph = '';
-  if (q.p) {
-    ph = '<div class="passage"><div class="passage-label">📄 ' + q.pt + '</div>'
-       + q.p.replace(/\n/g,'<br>')
-       + '<div class="src-note">📚 ' + q.src + '</div></div>';
-  } else {
-    ph = '<div class="src-note" style="margin-bottom:8px">📚 ' + q.src + '</div>';
-  }
-
-  const L = ['A','B','C'];
-  const opts = q.o.map((o,i) => {
-    let cls = 'option', icon = '';
-    if (isR) {
-      cls += ' disabled';
-      if (i === q.c) { cls += ' correct'; icon = '<span class="opt-icon">✅</span>'; }
-      else if (i === sel && i !== q.c) { cls += ' incorrect'; icon = '<span class="opt-icon">❌</span>'; }
-    } else if (i === sel) cls += ' selected';
-    return '<div class="' + cls + '" onclick="selOpt(' + idx + ',' + i + ')">'
-         + '<div class="option-letter">' + L[i] + '</div>'
-         + '<div class="opt-text">' + o + '</div>' + icon
-         + '</div>';
+function renderQuestion(idx){
+  current=idx;
+  const q=Q[idx],sc=SS[q.sa]||{bg:"#e8f5e9",color:"#1b5e20",icon:"📌"};
+  const isR=revealed[idx],sel=answers[idx];
+  let ph='';
+  if(q.p) ph=`<div class="passage"><div class="passage-label">📄 ${q.pt}</div>${q.p.replace(/\n/g,'<br>')}</div>`;
+  let mth='';
+  if(q.mt) mth=q.mt;
+  const cxBadge=q.cx?`<span class="complexity-badge">🧩 Relaciona columnas</span>`:'';
+  const L=['A','B','C'];
+  const opts=q.o.map((o,i)=>{
+    let cls='option';
+    if(isR){cls+=' disabled';if(i===q.c)cls+=' correct';else if(i===sel&&i!==q.c)cls+=' incorrect';}
+    else if(i===sel)cls+=' selected';
+    return `<div class="${cls}" onclick="selOpt(${idx},${i})"><div class="option-letter">${L[i]}</div><div>${o}</div></div>`;
   }).join('');
-
-  const ri = isR ? (sel === q.c ? '✅ Correcto' : sel === null ? '⏭️ Sin responder' : '❌ Incorrecto') : '';
-
-  window.scrollTo({top:0,behavior:'instant'});
-  document.getElementById('examScreen').innerHTML =
-    '<div class="question-card">'
-    + '<div class="q-meta">'
-    + '<span class="q-badge" style="background:' + sc.bg + ';color:' + sc.color + '">' + sc.icon + ' ' + q.sal + '</span>'
-    + '<span class="q-num">' + (idx+1) + '/' + Q.length + '</span>'
-    + '</div>'
-    + ph
-    + '<div class="question-text">' + q.q + '</div>'
-    + '<div class="options">' + opts + '</div>'
-    + '<div class="explanation ' + (isR ? 'show' : '') + '"><strong>'
-    + ri + (ri ? ' — ' : '') + 'Explicación:</strong> ' + q.ex + '</div>'
-    + '</div>'
-    + (!isR && answers[idx] !== null
-       ? '<div class="ver-sol-wrap"><button class="btn-ver-sol" onclick="rev(' + idx + ')">Ver explicación 💡</button></div>'
-       : '');
-
-  document.getElementById('progressBar').style.width = ((idx+1)/Q.length*100) + '%';
-  document.getElementById('navCurrent').textContent = idx + 1;
-  document.getElementById('navTotal').textContent   = Q.length;
-  document.getElementById('btnPrev').disabled = idx === 0;
-  document.getElementById('btnNext').textContent = idx === Q.length-1 ? '🏁 Finalizar' : 'Sig. →';
+  const ri=isR?(sel===q.c?'✅ Correcto':sel===null?'⏭️ Sin responder':'❌ Incorrecto'):'';
+  document.getElementById('examScreen').innerHTML=`
+    <div class="question-card">
+      <div class="q-meta">
+        <div class="q-badge-wrap"><span class="q-badge" style="background:${sc.bg};color:${sc.color}">${sc.icon} ${q.sal}</span>${cxBadge}</div>
+        <span class="q-num">${idx+1}/${Q.length}</span>
+      </div>
+      ${ph}
+      ${mth}
+      <div class="question-text">${q.q}</div>
+      <div class="options">${opts}</div>
+      <div class="explanation ${isR?'show':''}"><strong>${ri} — Explicación:</strong> ${q.ex}</div>
+    </div>
+    ${!isR&&answers[idx]!==null?`<div style="text-align:center;margin-bottom:10px"><button class="btn btn-secondary" onclick="rev(${idx})">Ver explicación</button></div>`:''}
+  `;
+  document.getElementById('progressBar').style.width=((idx+1)/Q.length*100)+'%';
+  document.getElementById('navCurrent').textContent=idx+1;
+  document.getElementById('navTotal').textContent=Q.length;
+  document.getElementById('btnPrev').disabled=idx===0;
+  document.getElementById('btnNext').textContent=idx===Q.length-1?'Ver diagnóstico 🏁':'Siguiente →';
 }
 
-function selOpt(qi,oi){ if(revealed[qi]) return; answers[qi]=oi; renderQuestion(qi); }
-function rev(idx){ revealed[idx]=true; renderQuestion(idx); }
-function nextQ(){ if(current<Q.length-1) renderQuestion(current+1); else showResults(); }
-function prevQ(){ if(current>0) renderQuestion(current-1); }
+function selOpt(qi,oi){if(revealed[qi])return;answers[qi]=oi;renderQuestion(qi);}
+function rev(idx){revealed[idx]=true;renderQuestion(idx);}
+function nextQ(){if(current<Q.length-1)renderQuestion(current+1);else showResults();}
+function prevQ(){if(current>0)renderQuestion(current-1);}
 
-/* ═══════════════════════════════════════════════════════
-   TIMER
-═══════════════════════════════════════════════════════ */
-function startTimer() {
-  timerInterval = setInterval(function() {
+function startTimer(){
+  secondsLeft=TIME_LIMIT;
+  timerInterval=setInterval(()=>{
     secondsLeft--;
-    const m = Math.floor(secondsLeft/60).toString().padStart(2,'0');
-    const s = (secondsLeft%60).toString().padStart(2,'0');
-    const el = document.getElementById('timer');
-    if (!el) return;
-    el.textContent = m + ':' + s;
-    el.className = 'timer' + (secondsLeft < 300 ? ' danger' : secondsLeft < 600 ? ' warning' : '');
-    if (secondsLeft <= 0) { clearInterval(timerInterval); showResults(); }
-  }, 1000);
+    const m=Math.floor(secondsLeft/60).toString().padStart(2,'0'),s=(secondsLeft%60).toString().padStart(2,'0');
+    const el=document.getElementById('timer');
+    el.textContent=`${m}:${s}`;
+    el.className='timer'+(secondsLeft<300?' danger':secondsLeft<600?' warning':'');
+    if(secondsLeft<=0){clearInterval(timerInterval);showResults();}
+  },1000);
 }
 
-/* ═══════════════════════════════════════════════════════
-   RESULTADOS
-═══════════════════════════════════════════════════════ */
-function showResults() {
+function showResults(){
   clearInterval(timerInterval);
   document.getElementById('examScreen').classList.add('hidden');
   document.getElementById('navBar').classList.add('hidden');
+  const total=Q.length,answered=answers.filter(a=>a!==null).length;
+  const correct=answers.filter((a,i)=>a===Q[i].c).length;
+  const wrong=answered-correct,skipped=total-answered,pct=Math.round(correct/total*100);
 
-  const total    = Q.length;
-  const answered = answers.filter(function(a){ return a !== null; }).length;
-  const correct  = answers.filter(function(a,i){ return a === Q[i].c; }).length;
-  const wrong    = answered - correct;
-  const skipped  = total - answered;
-  const pct      = Math.round(correct / total * 100);
-
-  const areas = {};
-  Q.forEach(function(q,i) {
-    if (!areas[q.area]) areas[q.area] = {total:0,correct:0};
+  const areas={};
+  Q.forEach((q,i)=>{
+    if(!areas[q.area])areas[q.area]={total:0,correct:0};
     areas[q.area].total++;
-    if (answers[i] === q.c) areas[q.area].correct++;
+    if(answers[i]===q.c)areas[q.area].correct++;
   });
 
-  const subs = {};
-  Q.forEach(function(q,i) {
-    if (!subs[q.sa]) subs[q.sa] = {label:q.sal,total:0,correct:0};
+  const subs={};
+  Q.forEach((q,i)=>{
+    if(!subs[q.sa])subs[q.sa]={label:q.sal,total:0,correct:0};
     subs[q.sa].total++;
-    if (answers[i] === q.c) subs[q.sa].correct++;
+    if(answers[i]===q.c)subs[q.sa].correct++;
   });
 
-  const weak = Object.entries(subs).filter(function(e){ return e[1].correct/e[1].total < 0.6; }).map(function(e){ return e[1].label; });
-  const cc   = pct >= 70 ? 'score-good' : pct >= 50 ? 'score-mid' : 'score-low';
-  const msg  = pct >= 80 ? 'Excelente. Dominas los conocimientos técnicos de la VCEyEC a nivel experto.'
-             : pct >= 60 ? 'Buen avance. Refuerza los temas operativos señalados.'
-             : 'Diagnóstico listo. Enfócate en las áreas marcadas antes del examen.';
+  const weak=Object.entries(subs).filter(([,s])=>s.correct/s.total<0.6).map(([,s])=>s.label);
+  const cc=pct>=70?'score-good':pct>=50?'score-mid':'score-low';
+  const msg=pct>=80?'¡Excelente! Dominas los conocimientos técnicos del cargo.':pct>=60?'Buen avance. Refuerza los temas operativos señalados.':'Diagnóstico listo. Enfócate en las áreas marcadas antes del examen.';
 
-  const areaColors = {
-    "Marco normativo e institucional":        "#1b5e20",
-    "Capacitación electoral":                 "#0d47a1",
-    "Jornada electoral — funciones del vocal":"#4a148c",
-    "Educación cívica y participación ciudadana":"#006064",
-    "Normativa aplicable al cargo":           "#1a237e"
-  };
-
-  const rows = Object.entries(areas).map(function(entry) {
-    const name = entry[0], a = entry[1];
-    const p    = Math.round(a.correct / a.total * 100);
-    const icon = p >= 80 ? '✅' : p >= 60 ? '⚠️' : '❌';
-    const bc   = p >= 60
-      ? 'linear-gradient(90deg,' + (areaColors[name]||'#1b5e20') + ',#43a047)'
-      : 'linear-gradient(90deg,#c62828,#ef5350)';
-    return '<div class="area-row">'
-      + '<div class="area-name">' + icon + ' ' + name + '</div>'
-      + '<div class="area-bar-wrap"><div class="area-bar" style="width:' + p + '%;background:' + bc + '"></div></div>'
-      + '<div class="area-pct" style="color:' + (p>=60?'#1b5e20':'#c62828') + '">' + p + '%</div>'
-      + '</div>';
+  const areaColors={"Estructura del INE":"#1b5e20","Proceso electoral":"#0d47a1","Justicia electoral":"#b71c1c","Organización de la elección":"#4a148c","Resultados y declaración de validez":"#01579b"};
+  const rows=Object.entries(areas).map(([name,a])=>{
+    const p=Math.round(a.correct/a.total*100);
+    const icon=p>=80?'✅':p>=60?'⚠️':'❌';
+    const bc=p>=60?`linear-gradient(90deg,${areaColors[name]||'#1b5e20'},#43a047)`:'linear-gradient(90deg,#c62828,#ef5350)';
+    return `<div class="area-row"><div class="area-name">${icon} ${name}</div><div class="area-bar-wrap"><div class="area-bar" style="width:${p}%;background:${bc}"></div></div><div class="area-pct" style="color:${p>=60?'#1b5e20':'#c62828'}">${p}%</div></div>`;
   }).join('');
 
-  const wb = weak.length
-    ? '<div class="weak-banner"><h4>🎯 Estudia esto primero:</h4><p>Menos del 60% en estas subáreas. Son clave para el cargo.</p><div class="weak-tags">' + weak.map(function(t){ return '<span class="weak-tag">📌 ' + t + '</span>'; }).join('') + '</div></div>'
-    : '<div style="background:#e8f5e9;border-radius:10px;padding:13px;margin:13px 0;color:#1b5e20;font-weight:600">✅ ¡Dominas todas las áreas técnicas del cargo!</div>';
+  const wb=weak.length?`<div class="weak-banner"><h4>🎯 Estudia esto primero:</h4><p>Menos del 60% en estas subáreas. Son las más operativas del cargo.</p><div class="weak-tags">${weak.map(t=>`<span class="weak-tag">📌 ${t}</span>`).join('')}</div></div>`:
+    `<div style="background:#e8f5e9;border-radius:10px;padding:14px;margin:14px 0;color:#1b5e20;font-weight:600">✅ ¡Dominas todas las áreas técnicas del cargo!</div>`;
+  const tu=TIME_LIMIT-secondsLeft,tm=Math.floor(tu/60),ts=tu%60;
 
-  const elapsed = Math.max(0, TIME_LIMIT - secondsLeft);
-  const tm = Math.floor(elapsed/60);
-  const ts = elapsed%60;
-
-  document.getElementById('resultsScreen').innerHTML =
-    '<div class="results-screen">'
-    + '<div style="background:#e8f5e9;border-radius:10px;padding:9px 14px;margin-bottom:16px;font-size:.8rem;color:#1b5e20;font-weight:600">📋 DIAGNÓSTICO VCEyEC v6 — ' + new Date().toLocaleDateString('es-MX') + '</div>'
-    + '<div class="score-circle ' + cc + '">' + pct + '%<div class="score-sub">' + correct + '/' + total + '</div></div>'
-    + '<h2 style="margin-bottom:7px">' + msg + '</h2>'
-    + '<p style="margin-bottom:18px;color:#777;font-size:.83rem">Tiempo: ' + tm + 'm ' + ts + 's · Respondidas: ' + answered + '/' + total + '</p>'
-    + '<div class="stats-grid">'
-    + '<div class="stat-card stat-correct"><div class="n">' + correct + '</div><div class="l">✅ Correctas</div></div>'
-    + '<div class="stat-card stat-wrong"><div class="n">' + wrong + '</div><div class="l">❌ Incorrectas</div></div>'
-    + '<div class="stat-card stat-skip"><div class="n">' + skipped + '</div><div class="l">⏭️ Saltadas</div></div>'
-    + '</div>'
-    + wb
-    + '<div style="text-align:left;margin-bottom:22px"><h3 style="font-size:.87rem;font-weight:700;color:#444;margin-bottom:9px">Desempeño por área</h3>' + rows + '</div>'
-    + '<div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">'
-    + '<button class="btn btn-primary btn-lg" onclick="reviewExam()">Revisar con explicaciones</button>'
-    + '<button class="btn btn-secondary btn-lg" onclick="startExam()">🔀 Nuevo diagnóstico</button>'
-    + '</div>'
-    + '<div style="margin-top:18px;padding:9px 12px;background:#f0fff4;border-radius:8px;font-size:.67rem;color:#aaa;text-align:left;line-height:1.7">'
-    + '📚 <strong style="color:#1b5e20">Bibliografía oficial:</strong> LGMDE (2021) · LGIPE (2024) · LGSMIME (2024) · '
-    + 'IFE (2008) Regl. Sesiones Juntas · INE (2020) Regl. Quejas VPcM · '
-    + 'INE (2022) Protocolo VPcM · INE/CG602/2023 Voto en prisión preventiva · '
-    + 'INE (2023) Lineamientos cómputos distritales PEF 2023-2024'
-    + '</div>'
-    + '</div>';
-
+  document.getElementById('resultsScreen').innerHTML=`
+    <div class="results-screen">
+      <div style="background:#e8f5e9;border-radius:10px;padding:9px 14px;margin-bottom:18px;font-size:0.82rem;color:#1b5e20;font-weight:600">📋 DIAGNÓSTICO MÓDULO D — ${new Date().toLocaleDateString('es-MX')}</div>
+      <div class="score-circle ${cc}">${pct}%<div class="score-sub">${correct}/${total}</div></div>
+      <h2 style="margin-bottom:8px">${msg}</h2>
+      <p style="margin-bottom:20px">Tiempo: ${tm}m ${ts}s · Respondidas: ${answered}/${total}</p>
+      <div class="stats-grid">
+        <div class="stat-card stat-correct"><div class="n">${correct}</div><div class="l">✅ Correctas</div></div>
+        <div class="stat-card stat-wrong"><div class="n">${wrong}</div><div class="l">❌ Incorrectas</div></div>
+        <div class="stat-card stat-skip"><div class="n">${skipped}</div><div class="l">⏭️ Saltadas</div></div>
+      </div>
+      ${wb}
+      <div style="text-align:left;margin-bottom:24px"><h3 style="font-size:0.9rem;font-weight:700;color:#444;margin-bottom:10px">Desempeño por área</h3>${rows}</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary btn-lg" onclick="reviewExam()">Revisar con explicaciones</button>
+        <button class="btn btn-secondary btn-lg" onclick="location.reload()">🔀 Nuevo diagnóstico (aleatorio)</button>
+      </div>
+    </div>
+  `;
   document.getElementById('resultsScreen').classList.remove('hidden');
   window.scrollTo(0,0);
 }
 
-function reviewExam() {
+function reviewExam(){
   document.getElementById('resultsScreen').classList.add('hidden');
   document.getElementById('examScreen').classList.remove('hidden');
   document.getElementById('navBar').classList.remove('hidden');
-  revealed = revealed.map(function(){ return true; });
+  revealed=revealed.map(()=>true);
   renderQuestion(0);
   window.scrollTo(0,0);
+}
+</script>
+
+<!-- ===== BIBLIOGRAFÍA ===== -->
+<div class="biblio-section">
+  <button class="biblio-toggle" id="biblioToggle" onclick="toggleBiblio()">
+    📚 Bibliografía y fuentes del simulacro
+    <span class="arrow">▼</span>
+  </button>
+  <div class="biblio-box" id="biblioBox">
+
+    <h3>📖 Normativa constitucional y legal</h3>
+    <ul class="biblio-list">
+      <li><strong>Constitución Política de los Estados Unidos Mexicanos (CPEUM).</strong> Art. 41. Diario Oficial de la Federación, México.</li>
+      <li><strong>Ley General de Instituciones y Procedimientos Electorales (LGIPE).</strong> INE, México.
+        <span class="biblio-url">https://sidj.ine.mx/restWSsidj-nc/app/doc/662/20/1%20 [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Ley General del Sistema de Medios de Impugnación en Materia Electoral (LGSMIME).</strong> Art. 8. INE, México.</li>
+      <li><strong>Ley General en Materia de Delitos Electorales (LGMDE).</strong> INE, México.</li>
+      <li><strong>Ley General de Partidos Políticos (LGPP).</strong> INE, México.</li>
+    </ul>
+
+    <h3>🏛️ Documentos institucionales del INE</h3>
+    <ul class="biblio-list">
+      <li><strong>Instituto Nacional Electoral (2023).</strong> Modelo de Operación para la Organización del Voto Anticipado, para el Proceso Electoral Concurrente 2023-2024.
+        <span class="biblio-url">https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/153093/CGex202309-08-ap-11-a.pdf [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2024).</strong> Acuerdo INE/CG2240/2024 — declaratoria del inicio del proceso electoral extraordinario 2024-2025 (elección de cargos del Poder Judicial Federal, Suprema Corte, Tribunal Electoral, Tribunal de Disciplina Judicial y magistraturas de circuito).
+        <span class="biblio-url">https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/176817/CGex202409-23-ap-2.pdf [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2024).</strong> Reglamento de sesiones de los consejos locales y distritales del INE.
+        <span class="biblio-url">https://sidj.ine.mx/restWSsidj-nc/app/doc/652/20/1 [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2025).</strong> Anexo 5. Bodegas electorales y procedimiento para el conteo, sellado y agrupamiento de boletas electorales, del Reglamento de Elecciones.
+        <span class="biblio-url">https://sidj.ine.mx/restWSsidj-nc/app/doc/662/20/2/Anexos-del-Reglamento-de-Elecciones.pdf/ [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2025).</strong> Anexo 8.1. Manual de ubicación, integración y funcionamiento de casillas electorales, del Reglamento de Elecciones.
+        <span class="biblio-url">https://sidj.ine.mx/restWSsidj-nc/app/doc/662/20/2/Anexos-del-Reglamento-de-Elecciones.pdf/ [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2025).</strong> Instrucciones de trabajo para el Modelo de Atención Ciudadana.
+        <span class="biblio-url">https://tabasco.sgc-nacional.com/8%20Operaci%C3%B3n/Procesos%20Sustantivos/Instrucciones%20de%20trabajo%20para%20la%20Operaci%C3%B3n/Modelo%20de%20Atenci%C3%B3n%20Ciudadana.pdf [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2025).</strong> Reglamento de Elecciones.
+        <span class="biblio-url">https://sidj.ine.mx/restWSsidj-nc/app/doc/662/20/1%20 [consulta: diciembre de 2025]</span>
+      </li>
+      <li><strong>Instituto Nacional Electoral (2025).</strong> Reglamento Interior del Instituto Nacional Electoral.
+        <span class="biblio-url">https://sidj.ine.mx/restWSsidj-nc/app/doc/663/20/1 [consulta: diciembre de 2025]</span>
+      </li>
+    </ul>
+
+    <h3>🗂️ Guía de estudio de referencia</h3>
+    <ul class="biblio-list">
+      <li><strong>Instituto Nacional Electoral (2026).</strong> <em>Guía — Vocalía de Organización Electoral local y distrital.</em> INE, México, 31 pp.
+        <span class="biblio-url">https://ine.mx/wp-content/uploads/2026/04/Guia-Vocalia-de-Organizacion-Electoral-local-y-distrital.pdf</span>
+      </li>
+    </ul>
+
+    <p style="font-size:0.74rem;color:#888;margin-top:16px;text-align:right">📌 Simulacro INE – Módulo D · v6 · Incluye preguntas de <em>relaciona columnas</em> con opciones similares · Elaborado con base en las fuentes anteriores.</p>
+  </div>
+</div>
+
+<script>
+function toggleBiblio(){
+  const btn=document.getElementById('biblioToggle');
+  const box=document.getElementById('biblioBox');
+  btn.classList.toggle('open');
+  box.classList.toggle('show');
 }
 </script>
 </body>
